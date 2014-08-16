@@ -3,7 +3,9 @@ package gameObjects;
 import gameObjects.CARDS.Card;
 import gameObjects.ROOMS.Room;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,7 +23,7 @@ public class Character implements Piece{
 	
 	private String data = "";	
 	private Location position;
-	private Set<Card> hand = new HashSet<>();
+	private List<Card> hand = new ArrayList<>();
 	private boolean inRoom = false;
 	private boolean suggestionMade = false;
 	private boolean movementMade = false;
@@ -49,7 +51,7 @@ public class Character implements Piece{
 	/**
 	 * This method returns all the Cards in the character's hand.
 	 * */
-	public Set<Card> getHand() {
+	public List<Card> getHand() {
 		return hand;
 	}
 
@@ -58,7 +60,7 @@ public class Character implements Piece{
 	 * 
 	 * PLEASE! DO *NOT* USE THIS AFTER THE GAME IS SET UP!
 	 * */
-	public void setHand(Set<Card> hand) {
+	public void setHand(List<Card> hand) {
 		this.hand = hand;
 	}
 	

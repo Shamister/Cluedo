@@ -97,6 +97,9 @@ public class Main {
 
 	private final int CARD_WIDTH = 86;
 	private final int CARD_HEIGHT = 135;
+	
+	// Card image JLabel fields here
+	private Set<JLabel> playerHand;
 
 	BufferedImage img;
 
@@ -573,7 +576,59 @@ public class Main {
 			subPanel.add(endTurnButton, gbc);
 			panel.add(subPanel);
 
-		} else if (text.equals("Cards")) {
+		} else if (text.equals("Cards")) {//FIXME: ADD THE HAND!!
+			//FIXME: ADD THE HAND!!
+			if (game != null && game.getTurnOrder() != null && game.getCurrentCharacter() != null){
+				//playerHand.clear();
+				List<Card> hand = game.getCurrentCharacter().getHand();
+				JPanel subPanel = new JPanel();
+				// sub panel
+				subPanel.setLayout(new GridBagLayout());
+				GridBagConstraints gbc = new GridBagConstraints();
+	
+				gbc.fill = GridBagConstraints.HORIZONTAL;
+				gbc.ipadx = 80;
+				// add padding by 5px
+				gbc.insets = new Insets(5, 0, 0, 0);
+				gbc.gridy = 0;
+				
+				JLabel label = new JLabel(game.getCurrentCharacter().name + "'s Cards:");
+				subPanel.add(label, gbc);
+				gbc.gridy += 1;
+				
+				for (int i = 0; i < hand.size(); i++){	
+					label = new JLabel();
+					playerHand.add(label);
+					String cardType = hand.get(i).getCardType();
+					String type;
+					String cardName = hand.get(i).getCardName();
+					switch (cardType){
+					case "Character": 
+						type = "chars";
+						break;
+					case "Weapon": 
+						type = "weapons";
+						break;
+					case "Room": 
+						type = "rooms";
+						break;
+					default: 
+						type = "ioyhbefvolberouyb";
+						break;
+					}
+					ImageIcon ii = new ImageIcon(this.getClass()
+							.getResource(
+									imagePath + "cards/" + type + "/" + cardName
+											+ ".png"));
+					label.setIcon(ii);
+					label.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
+					subPanel.add(label, gbc);
+		
+					gbc.gridy += 1;
+				}
+			}
+			
+			//FIXME: ADD THE HAND!!
 
 		} else if (text.equals("Actions")) {
 			JPanel subPanel = new JPanel();
@@ -605,7 +660,7 @@ public class Main {
 
 			charImage = new JLabel();
 			charImage.setHorizontalAlignment(JLabel.CENTER);
-			charImage.setPreferredSize(new Dimension(86, 135));
+			charImage.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
 			subPanel.add(charImage, gbc);
 
 			gbc.gridy += 1;
@@ -628,7 +683,7 @@ public class Main {
 
 			weaponImage = new JLabel();
 			weaponImage.setHorizontalAlignment(JLabel.CENTER);
-			weaponImage.setPreferredSize(new Dimension(86, 135));
+			weaponImage.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
 			subPanel.add(weaponImage, gbc);
 
 			gbc.gridy += 1;
@@ -651,7 +706,7 @@ public class Main {
 
 			roomImage = new JLabel();
 			roomImage.setHorizontalAlignment(JLabel.CENTER);
-			roomImage.setPreferredSize(new Dimension(86, 135));
+			roomImage.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
 			subPanel.add(roomImage, gbc);
 
 			gbc.gridy += 1;
@@ -776,7 +831,7 @@ public class Main {
 						Character refutingChar = null;
 						while (!SUGGESTINGPlayer.equals(currentPlayer)
 								&& !refuted) {
-							Set<Card> hand = currentPlayer.getHand();
+							List<Card> hand = currentPlayer.getHand();
 							for (Card c : hand) {
 								System.out.println(c);
 								if (c.getCardName().equals(room)
@@ -905,6 +960,7 @@ public class Main {
 		}
 		return panel;
 	}
+	
 
 	/**
 	 * show dice image when user rolled the dice
@@ -928,6 +984,7 @@ public class Main {
 			}
 		}
 	}
+	
 
 	/**
 	 * Show character card selected in Action Tab
@@ -944,6 +1001,7 @@ public class Main {
 			}
 		}
 	}
+	
 
 	/**
 	 * Show weapon card selected in Action Tab
@@ -959,6 +1017,7 @@ public class Main {
 			}
 		}
 	}
+	
 
 	/**
 	 * Show room card selected in Action Tab
@@ -974,8 +1033,8 @@ public class Main {
 				roomImage.setIcon(ii);
 			}
 		}
-
 	}
+	
 
 	/**
 	 * Pop up dialog to ask total players participating the game
@@ -1004,6 +1063,7 @@ public class Main {
 		}
 		return playerNum;
 	}
+	
 
 	/**
 	 * Ask each player name and character playing the game
@@ -1111,6 +1171,7 @@ public class Main {
 
 		return order;
 	}
+
 
 	/**
 	 * This method is adding items to menu bar
