@@ -900,7 +900,9 @@ public class Main {
 
 	/**
 	 * show dice image when user rolled the dice
-	 * @param i total number of dices
+	 * 
+	 * @param i
+	 *            total number of dices
 	 */
 	public void showDice(int i) {
 		if (i > 0) {
@@ -969,6 +971,7 @@ public class Main {
 
 	/**
 	 * Pop up dialog to ask total players participating the game
+	 * 
 	 * @return the total players
 	 */
 	public int askTotalPlayer() {
@@ -996,143 +999,88 @@ public class Main {
 
 	/**
 	 * Ask each player name and character playing the game
-	 * @param playerNum total player participating
+	 * 
+	 * @param playerNum
+	 *            total player participating
 	 * @return Queue of character playing
 	 */
 	public Queue<Character> askPlayerDetails(int playerNum) {
-		final List<JFrame> frames = new ArrayList<>();
 		final List<Character> characters = new ArrayList<>();
-		final Queue<Character> startOrder = new ArrayDeque<>();
+		final Queue<Character> order = new ArrayDeque<>();
 
 		for (int i = 0; i < playerNum; i++) {
 			final JFrame frame = new JFrame("Character Selection");
-			frames.add(frame);
 			frame.setAlwaysOnTop(true);
 			frame.setAutoRequestFocus(true);
 			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-			frame.addWindowListener(new WindowAdapter() {
-				@Override
-				public void windowClosing(WindowEvent e) {
-					for (JFrame frame : frames)
-						frame.dispose();
-					return;
-				}
-			});
+
 			frame.setPreferredSize(new Dimension(175, 300));
 			frame.setLocationRelativeTo(null);
 			JPanel panel = new JPanel();
-			final JLabel label = new JLabel("Name: ");
-			final JLabel label2 = new JLabel("Character: ");
+			final JLabel nameLabel = new JLabel("Name: ");
+			final JLabel charLabel = new JLabel("Character: ");
 			ButtonGroup characterGroup = new ButtonGroup();
 
 			final JTextField field = new JTextField("Player " + (i + 1));
 			field.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					label.setText("Name: " + field.getText());
+					nameLabel.setText("Name: " + field.getText());
 				}
 			});
 
-			final JRadioButton missScarlett = new JRadioButton("Miss Scarlett");
-			missScarlett.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					label2.setText("Character: 1 (Miss Scarlett)");
-				}
-			});
+			// create radio button so player can choose character
+			final List<JRadioButton> radioButtons = new ArrayList<JRadioButton>();
 
-			final JRadioButton clMustard = new JRadioButton("Colonel Mustard");
-			clMustard.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					label2.setText("Character: 2 (Colonel Mustard)");
-				}
-			});
-
-			final JRadioButton mrsWhite = new JRadioButton("Mrs White");
-			mrsWhite.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					label2.setText("Character: 3 (Mrs White)");
-				}
-			});
-
-			final JRadioButton rvrndGreen = new JRadioButton(
-					"The Reverend Green");
-			rvrndGreen.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					label2.setText("Character: 4 (The Reverend Green)");
-				}
-			});
-
-			final JRadioButton mrsPeacock = new JRadioButton("Mrs Peacock");
-			mrsPeacock.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					label2.setText("Character: 5 (Mrs Peacock)");
-				}
-			});
-
-			final JRadioButton profPlum = new JRadioButton("Professor Plum");
-			profPlum.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					label2.setText("Character: 6 (Professor Plum)");
-				}
-			});
+			for (int j = 0; j < Data.charNames.length; j++) {
+				JRadioButton radioButton = new JRadioButton(Data.charNames[j]);
+				final int index = j;
+				radioButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						charLabel.setText("Character: " + (index + 1) + "("
+								+ Data.charNames[index] + ")");
+					}
+				});
+				radioButtons.add(radioButton);
+			}
 
 			JButton okButton = new JButton("OK");
 			okButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					boolean NO = false;
-					if (field.getText().equals("")
-							|| (!missScarlett.isSelected()
-									&& !clMustard.isSelected()
-									&& !mrsWhite.isSelected()
-									&& !rvrndGreen.isSelected()
-									&& !mrsPeacock.isSelected() && !profPlum
-										.isSelected()))
+					boolean no = false;
+					boolean charSelected = false;
+
+					// check if radio button is selected
+					for (int j = 0; j < radioButtons.size(); j++) {
+						if (radioButtons.get(j).isSelected()) {
+							charSelected = true;
+							break;
+						}
+					}
+
+					if (field.getText().equals("") || !charSelected) {
 						JOptionPane
 								.showMessageDialog(null,
 										"Please enter your name and choose a character.");
-					else {
+					} else {
 						for (Character c : characters) {
 							int i = c.token;
-							if (Integer.parseInt(label2.getText().substring(11,
-									12)) == i) {
-								NO = true;
+							if (Integer.parseInt(charLabel.getText().substring(
+									11, 12)) == i) {
+								no = true;
 								JOptionPane.showMessageDialog(null,
 										"Sorry, this character is taken.");
-								switch (i) {
-								case 1:
-									missScarlett.setEnabled(false);
-									break;
-								case 2:
-									clMustard.setEnabled(false);
-									break;
-								case 3:
-									mrsWhite.setEnabled(false);
-									break;
-								case 4:
-									rvrndGreen.setEnabled(false);
-									break;
-								case 5:
-									mrsPeacock.setEnabled(false);
-									break;
-								case 6:
-									profPlum.setEnabled(false);
-									break;
-								}
+
+								radioButtons.get(i - 1).setEnabled(false);
 							}
 						}
-						if (!NO) {
+						if (!no) {
 							characters.add(new Character(field.getText(),
-									Integer.parseInt(label2.getText()
+									Integer.parseInt(charLabel.getText()
 											.substring(11, 12))));
-							startOrder.offer(characters.get(characters.size() - 1));
-							frames.remove(frame);
+							order.offer(characters.get(characters.size() - 1));
 							game.createBoard(characters);
 							frame.dispose();
 						}
@@ -1140,32 +1088,27 @@ public class Main {
 				}
 			});
 			frame.setContentPane(panel);
-			panel.add(label);
+			panel.add(nameLabel);
 			panel.add(field);
-			panel.add(label2);
-			characterGroup.add(missScarlett);
-			characterGroup.add(clMustard);
-			characterGroup.add(mrsWhite);
-			characterGroup.add(rvrndGreen);
-			characterGroup.add(mrsPeacock);
-			characterGroup.add(profPlum);
-			panel.add(missScarlett);
-			panel.add(clMustard);
-			panel.add(mrsWhite);
-			panel.add(rvrndGreen);
-			panel.add(mrsPeacock);
-			panel.add(profPlum);
+			panel.add(charLabel);
+
+			for (int j = 0; j < radioButtons.size(); j++) {
+				characterGroup.add(radioButtons.get(j));
+				panel.add(radioButtons.get(j));
+			}
 			panel.add(okButton);
 			frame.pack();
 			frame.setVisible(true);
 		}
 
-		return startOrder;
+		return order;
 	}
 
 	/**
 	 * This method is adding items to menu bar
-	 * @param menu the menu bar of the main game
+	 * 
+	 * @param menu
+	 *            the menu bar of the main game
 	 */
 	public void addMenuItems(JMenu menu) {
 		if (menu.getText().equals("File")) {
@@ -1175,7 +1118,7 @@ public class Main {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					int value = JOptionPane.showConfirmDialog(null,
-							"Do you really want to start a New Game?",
+							"Do you want to start a new game?",
 							"Start New Game", JOptionPane.YES_NO_OPTION);
 					if (value == 0) {
 						GameState.state = GameState.StateOfGame.NOTHINGS_HAPPENING;
@@ -1215,7 +1158,7 @@ public class Main {
 			fileMenuItem.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final JFrame frame = new JFrame("HELP!!");
+					final JFrame frame = new JFrame("About the Game");
 					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					frame.setPreferredSize(new Dimension(300, 600));
 					frame.setLocationRelativeTo(null);
@@ -1226,52 +1169,7 @@ public class Main {
 					textArea.setWrapStyleWord(true);
 					frame.setContentPane(scrollPane);
 					frame.setResizable(false);
-					textArea.setText("Overview:\n        Cluedo is a basically a \"whodunnit?\" game.\n\n"
-
-							+ "Goal:\n        The goal of Cluedo is to solve a murder mystery. To do this, you must go around "
-							+ "the board and make suggestions about the facts of the case: The Room the murder happened in, "
-							+ "The Weapon used to kill the victim, and the Character responsible. Then your opponents must try "
-							+ "to disprove your suggestion.\n\nIf they can't, then you may have found the facts!\n\nEventually, "
-							+ "you'll want to make an accusation regarding a Room, a Weapon and a Character. But watch out! "
-							+ "Accusations are far more serious than mere suggestions - get even ONE fact wrong and you're off "
-							+ "the case (eliminated)!\n\n"
-
-							+ "Starting Off:\n        To start a game, you will need to click on <File>, then on <New Game> "
-							+ "(You will always be asked if you want start a new game - deal with it), then enter a number "
-							+ "between 3 and 6 (inclusive) to decide on the number of players. After that, a number of "
-							+ "frames corresponding to the number you entered will pop up - You MUST enter a name and choose a "
-							+ "Character. Once everyone's chosen a Character (and you've gotten the blood out of the carpet), "
-							+ "you can play!\n\n"
-
-							+ "Gameplay - Squares and You:\n        Squares are colour-coded to mean different things:\n\n"
-							+ "RED squares are doors - moving onto them allows you to enter a room.\n        SOME doors are on "
-							+ "corners - in this case, you can only enter from directly underneath or above them.\n"
-							+ "BLUE squares represent Rooms - you can only enter them through a DOOR (RED).\n"
-							+ "BROWN squares are Inaccessible areas. You can't move there.\n"
-							+ "BLACK squares and WHITE squares are other Pieces. The WHITE one is the one that's moving.\n\n"
-
-							+ "Gameplay - MOVEMENT:\n        There are two ways to move. ONE way is to roll the dice (by clicking "
-							+ "the button), OR you can use a Secret Passage.\n\n"
-
-							+ "Using and moving with the dice:\n        If you decide to roll the dice, the highlighted "
-							+ "squares on the board show you where you can move - the dice above the buttons show you how many "
-							+ "spaces you can move. You CANNOT move through people - only around them!!\n\n"
-
-							+ "Using and moving with Secret Passages:\n        If you decide to use a Secret Passage, you will "
-							+ "be asked if you're serious. If you are, you'll be moved to the room diagonally opposite you. "
-							+ "ONLY CORNER ROOMS have Secret Passages!\n\n"
-
-							+ "Gameplay - Making Suggestions:\n        Two win, you need to CORRECTLY guess ALL 3 facts about "
-							+ "the case. But there are a LOT of possibilities - to eliminate them, you go to a room and make "
-							+ "a suggestion involving that room, a weapon and a character. At the start of the game you were dealt "
-							+ "between 3 and 6 cards (depending on the number of players). 3 other cards were put aside in an "
-							+ "envelope - these are the facts you must deduce. SO, when you make a suggestion, and an opponent "
-							+ "shows you a card, it CANNOT be a possibility. This is how you narrow possibilities!\n"
-							+ "        We've actually taken the liberty of recording the results of your suggestions for you."
-							+ "To see these notes, please click on <Options>, then <Show Data>. This will only show the current "
-							+ "player's notes though.\n\n"
-
-					);
+					textArea.setText(Data.helpDes);
 
 					frame.pack();
 					frame.setVisible(true);
