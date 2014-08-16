@@ -1,5 +1,6 @@
 package ui;
 
+import gameObjects.Character;
 import gameObjects.Data;
 import gameObjects.Location;
 import gameObjects.Piece;
@@ -412,8 +413,7 @@ public class Main {
 						if (value == 0) {
 							game.goThroughTurn(GameState.TurnState.MOVE_VIA_DICE);
 							game.goThroughTurn(GameState.TurnState.MOVE_VIA_SP);
-							gameObjects.Character c = game
-									.getCurrentCharacter();
+							Character c = game.getCurrentCharacter();
 							Room room = game.getCurrentCharacter().getRoom();
 							List<Room> rooms = game.getBoard().getRooms();
 							for (Room r : rooms) {
@@ -472,9 +472,13 @@ public class Main {
 								for (Location l : game.getCurrentCharacter()
 										.getRoom().doors)
 									l.setAccessible(true);
-							else game.getCurrentCharacter().setPosition(
-									game.getBoard().getStart(game.getCurrentCharacter().token-1));
-							diceImage1.setIcon(null); 
+							else
+								game.getCurrentCharacter()
+										.setPosition(
+												game.getBoard()
+														.getStart(
+																game.getCurrentCharacter().token - 1));
+							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							game.EndTurnNow();
 							game.getBoardCanvas().repaint();
@@ -498,7 +502,7 @@ public class Main {
 								for (Location l : game.getCurrentCharacter()
 										.getRoom().doors)
 									l.setAccessible(true);
-							diceImage1.setIcon(null); 
+							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							game.EndTurnNow();
 							game.getBoardCanvas().repaint();
@@ -523,7 +527,7 @@ public class Main {
 									for (Location l : game
 											.getCurrentCharacter().getRoom().doors)
 										l.setAccessible(true);
-								diceImage1.setIcon(null); 
+								diceImage1.setIcon(null);
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
@@ -549,7 +553,7 @@ public class Main {
 									for (Location l : game
 											.getCurrentCharacter().getRoom().doors)
 										l.setAccessible(true);
-								diceImage1.setIcon(null); 
+								diceImage1.setIcon(null);
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
@@ -665,12 +669,9 @@ public class Main {
 												"GET A ROOM! (Pro Tip: Enter a room to make a Suggestion!)");
 							return;
 						}
-						Queue<gameObjects.Character> characters = game
-								.getTurnOrder();
-						gameObjects.Character SUGGESTINGPlayer = game
-								.getCurrentCharacter();
-						gameObjects.Character currentPlayer = game
-								.getCurrentCharacter();
+						Queue<Character> characters = game.getTurnOrder();
+						Character SUGGESTINGPlayer = game.getCurrentCharacter();
+						Character currentPlayer = game.getCurrentCharacter();
 						if (SUGGESTINGPlayer.isSuggestionMade()
 								|| !game.getPossibleActions().contains(
 										GameState.TurnState.MAKE_SUGGESTION)) {
@@ -730,7 +731,7 @@ public class Main {
 								}
 							}
 							if (accuesed.isCharacter()) {
-								gameObjects.Character a = (gameObjects.Character) accuesed;
+								Character a = (Character) accuesed;
 								a.setSuggestionMade(false);
 							}
 						}
@@ -795,7 +796,7 @@ public class Main {
 						currentPlayer = game.getCurrentCharacter();
 						boolean refuted = false;
 						Card refutingCard = null;
-						gameObjects.Character refutingChar = null;
+						Character refutingChar = null;
 						while (!SUGGESTINGPlayer.equals(currentPlayer)
 								&& !refuted) {
 							Set<Card> hand = currentPlayer.getHand();
@@ -982,11 +983,197 @@ public class Main {
 
 	}
 
+	public int askTotalPlayer() {
+		int playerNum = 0;
+		while (playerNum == 0) {
+			String s = JOptionPane
+					.showInputDialog("Please insert the number of players (3 - 6).");
+			try {
+				playerNum = Integer.parseInt(s);
+				GameState.expectedNumPlayers = playerNum;
+				if (playerNum < 3 || playerNum > 6) {
+					JOptionPane.showMessageDialog(null,
+							"Please choose a number 3 - 6 (inclusive).");
+					playerNum = 0;
+				}
+			} catch (NumberFormatException ex) {
+				playerNum = 0;
+				JOptionPane.showMessageDialog(null,
+						"... I said NUMBER please. A NUMBER from 3 - 6.\n"
+								+ "That means 3, 4, 5 or 6.");
+			}
+		}
+		return playerNum;
+	}
+
+	public Queue<Character> askPlayerDetails(int playerNum) {
+		final List<JFrame> frames = new ArrayList<>();
+		final List<Character> characters = new ArrayList<>();
+		final Queue<Character> startOrder = new ArrayDeque<>();
+
+		for (int i = 0; i < playerNum; i++) {
+			final JFrame frame = new JFrame("Character Selection");
+			frames.add(frame);
+			frame.setAlwaysOnTop(true);
+			frame.setAutoRequestFocus(true);
+			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			frame.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					for (JFrame frame : frames)
+						frame.dispose();
+					return;
+				}
+			});
+			frame.setPreferredSize(new Dimension(175, 300));
+			frame.setLocationRelativeTo(null);
+			JPanel panel = new JPanel();
+			final JLabel label = new JLabel("Name: ");
+			final JLabel label2 = new JLabel("Character: ");
+			ButtonGroup characterGroup = new ButtonGroup();
+
+			final JTextField field = new JTextField("Player " + (i + 1));
+			field.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					label.setText("Name: " + field.getText());
+				}
+			});
+
+			final JRadioButton missScarlett = new JRadioButton("Miss Scarlett");
+			missScarlett.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					label2.setText("Character: 1 (Miss Scarlett)");
+				}
+			});
+
+			final JRadioButton clMustard = new JRadioButton("Colonel Mustard");
+			clMustard.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					label2.setText("Character: 2 (Colonel Mustard)");
+				}
+			});
+
+			final JRadioButton mrsWhite = new JRadioButton("Mrs White");
+			mrsWhite.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					label2.setText("Character: 3 (Mrs White)");
+				}
+			});
+
+			final JRadioButton rvrndGreen = new JRadioButton(
+					"The Reverend Green");
+			rvrndGreen.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					label2.setText("Character: 4 (The Reverend Green)");
+				}
+			});
+
+			final JRadioButton mrsPeacock = new JRadioButton("Mrs Peacock");
+			mrsPeacock.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					label2.setText("Character: 5 (Mrs Peacock)");
+				}
+			});
+
+			final JRadioButton profPlum = new JRadioButton("Professor Plum");
+			profPlum.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					label2.setText("Character: 6 (Professor Plum)");
+				}
+			});
+
+			JButton okButton = new JButton("OK");
+			okButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					boolean NO = false;
+					if (field.getText().equals("")
+							|| (!missScarlett.isSelected()
+									&& !clMustard.isSelected()
+									&& !mrsWhite.isSelected()
+									&& !rvrndGreen.isSelected()
+									&& !mrsPeacock.isSelected() && !profPlum
+										.isSelected()))
+						JOptionPane
+								.showMessageDialog(null,
+										"Please enter your name and choose a character.");
+					else {
+						for (Character c : characters) {
+							int i = c.token;
+							if (Integer.parseInt(label2.getText().substring(11,
+									12)) == i) {
+								NO = true;
+								JOptionPane.showMessageDialog(null,
+										"Sorry, this character is taken.");
+								switch (i) {
+								case 1:
+									missScarlett.setEnabled(false);
+									break;
+								case 2:
+									clMustard.setEnabled(false);
+									break;
+								case 3:
+									mrsWhite.setEnabled(false);
+									break;
+								case 4:
+									rvrndGreen.setEnabled(false);
+									break;
+								case 5:
+									mrsPeacock.setEnabled(false);
+									break;
+								case 6:
+									profPlum.setEnabled(false);
+									break;
+								}
+							}
+						}
+						if (!NO) {
+							characters.add(new Character(field.getText(),
+									Integer.parseInt(label2.getText()
+											.substring(11, 12))));
+							startOrder.offer(characters.get(characters.size() - 1));
+							frames.remove(frame);
+							game.createBoard(characters);
+							frame.dispose();
+						}
+					}
+				}
+			});
+			frame.setContentPane(panel);
+			panel.add(label);
+			panel.add(field);
+			panel.add(label2);
+			characterGroup.add(missScarlett);
+			characterGroup.add(clMustard);
+			characterGroup.add(mrsWhite);
+			characterGroup.add(rvrndGreen);
+			characterGroup.add(mrsPeacock);
+			characterGroup.add(profPlum);
+			panel.add(missScarlett);
+			panel.add(clMustard);
+			panel.add(mrsWhite);
+			panel.add(rvrndGreen);
+			panel.add(mrsPeacock);
+			panel.add(profPlum);
+			panel.add(okButton);
+			frame.pack();
+			frame.setVisible(true);
+		}
+
+		return startOrder;
+	}
+
 	public void addMenuItems(JMenu menu) {
 		if (menu.getText().equals("File")) {
 			JMenuItem fileMenuItem = new JMenuItem("New Game");
 
-			final List<JFrame> frames = new ArrayList<>();
 			fileMenuItem.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -998,208 +1185,12 @@ public class Main {
 						rollDiceButton.setEnabled(true);
 						usePassageButton.setEnabled(true);
 						suggestButton.setEnabled(true);
-						final List<gameObjects.Character> characters = new ArrayList<>();
-						final Queue<gameObjects.Character> startOrder = new ArrayDeque<>();
-						int playerNum = 0;
-						while (playerNum == 0) {
-							String s = JOptionPane
-									.showInputDialog("Please insert the number of players (3 - 6).");
-							try {
-								playerNum = Integer.parseInt(s);
-								GameState.expectedNumPlayers = playerNum;
-								if (playerNum < 3 || playerNum > 6) {
-									JOptionPane
-											.showMessageDialog(null,
-													"Please choose a number 3 - 6 (inclusive).");
-									playerNum = 0;
-								}
-							} catch (NumberFormatException ex) {
-								playerNum = 0;
-								JOptionPane.showMessageDialog(null,
-										"... I said NUMBER please. A NUMBER from 3 - 6.\n"
-												+ "That means 3, 4, 5 or 6.");
-							}
-						}
+
+						int playerNum = askTotalPlayer();
 
 						GameState.expectedNumPlayers = playerNum;
 
-						for (int i = 0; i < playerNum; i++) {
-							final JFrame frame = new JFrame(
-									"Character Selection");
-							frames.add(frame);
-							frame.setAlwaysOnTop(true);
-							frame.setAutoRequestFocus(true);
-							frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-							frame.addWindowListener(new WindowAdapter() {
-								@Override
-								public void windowClosing(WindowEvent e) {
-									for (JFrame frame : frames)
-										frame.dispose();
-									return;
-								}
-							});
-							frame.setPreferredSize(new Dimension(175, 300));
-							frame.setLocationRelativeTo(null);
-							JPanel panel = new JPanel();
-							final JLabel label = new JLabel("Name: ");
-							final JLabel label2 = new JLabel("Character: ");
-							ButtonGroup characterGroup = new ButtonGroup();
-
-							final JTextField field = new JTextField("Player "
-									+ (i + 1));
-							field.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									label.setText("Name: " + field.getText());
-								}
-							});
-
-							final JRadioButton missScarlett = new JRadioButton(
-									"Miss Scarlett");
-							missScarlett
-									.addActionListener(new ActionListener() {
-										@Override
-										public void actionPerformed(
-												ActionEvent e) {
-											label2.setText("Character: 1 (Miss Scarlett)");
-										}
-									});
-
-							final JRadioButton clMustard = new JRadioButton(
-									"Colonel Mustard");
-							clMustard.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									label2.setText("Character: 2 (Colonel Mustard)");
-								}
-							});
-
-							final JRadioButton mrsWhite = new JRadioButton(
-									"Mrs White");
-							mrsWhite.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									label2.setText("Character: 3 (Mrs White)");
-								}
-							});
-
-							final JRadioButton rvrndGreen = new JRadioButton(
-									"The Reverend Green");
-							rvrndGreen.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									label2.setText("Character: 4 (The Reverend Green)");
-								}
-							});
-
-							final JRadioButton mrsPeacock = new JRadioButton(
-									"Mrs Peacock");
-							mrsPeacock.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									label2.setText("Character: 5 (Mrs Peacock)");
-								}
-							});
-
-							final JRadioButton profPlum = new JRadioButton(
-									"Professor Plum");
-							profPlum.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									label2.setText("Character: 6 (Professor Plum)");
-								}
-							});
-
-							JButton okButton = new JButton("OK");
-							okButton.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									boolean NO = false;
-									if (field.getText().equals("")
-											|| (!missScarlett.isSelected()
-													&& !clMustard.isSelected()
-													&& !mrsWhite.isSelected()
-													&& !rvrndGreen.isSelected()
-													&& !mrsPeacock.isSelected() && !profPlum
-														.isSelected()))
-										JOptionPane
-												.showMessageDialog(null,
-														"Please enter your name and choose a character.");
-									else {
-										for (gameObjects.Character c : characters) {
-											int i = c.token;
-											if (Integer.parseInt(label2
-													.getText()
-													.substring(11, 12)) == i) {
-												NO = true;
-												JOptionPane
-														.showMessageDialog(
-																null,
-																"Sorry, this character is taken.");
-												switch (i) {
-												case 1:
-													missScarlett
-															.setEnabled(false);
-													break;
-												case 2:
-													clMustard.setEnabled(false);
-													break;
-												case 3:
-													mrsWhite.setEnabled(false);
-													break;
-												case 4:
-													rvrndGreen
-															.setEnabled(false);
-													break;
-												case 5:
-													mrsPeacock
-															.setEnabled(false);
-													break;
-												case 6:
-													profPlum.setEnabled(false);
-													break;
-												}
-											}
-										}
-										if (!NO) {
-											characters
-													.add(new gameObjects.Character(
-															field.getText(),
-															Integer.parseInt(label2
-																	.getText()
-																	.substring(
-																			11,
-																			12))));
-											startOrder.offer(characters
-													.get(characters.size() - 1));
-											frames.remove(frame);
-											game.createBoard(characters);
-											frame.dispose();
-										}
-									}
-								}
-							});
-							frame.setContentPane(panel);
-							panel.add(label);
-							panel.add(field);
-							panel.add(label2);
-							characterGroup.add(missScarlett);
-							characterGroup.add(clMustard);
-							characterGroup.add(mrsWhite);
-							characterGroup.add(rvrndGreen);
-							characterGroup.add(mrsPeacock);
-							characterGroup.add(profPlum);
-							panel.add(missScarlett);
-							panel.add(clMustard);
-							panel.add(mrsWhite);
-							panel.add(rvrndGreen);
-							panel.add(mrsPeacock);
-							panel.add(profPlum);
-							panel.add(okButton);
-							frame.pack();
-							frame.setVisible(true);
-						}
-						game.setTurnOrder(startOrder);
+						game.setTurnOrder(askPlayerDetails(playerNum));
 					}
 				}
 			});
@@ -1222,8 +1213,7 @@ public class Main {
 				}
 			});
 			menu.add(fileMenuItem);
-		}
-		else if (menu.getText().equals("Options")) {
+		} else if (menu.getText().equals("Options")) {
 			JMenuItem fileMenuItem = new JMenuItem("Help");
 			fileMenuItem.addActionListener(new ActionListener() {
 				@Override
