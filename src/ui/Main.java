@@ -1,5 +1,6 @@
 package ui;
 
+import gameObjects.Character;
 import gameObjects.Data;
 import gameObjects.Location;
 import gameObjects.Piece;
@@ -412,8 +413,7 @@ public class Main {
 						if (value == 0) {
 							game.goThroughTurn(GameState.TurnState.MOVE_VIA_DICE);
 							game.goThroughTurn(GameState.TurnState.MOVE_VIA_SP);
-							gameObjects.Character c = game
-									.getCurrentCharacter();
+							Character c = game.getCurrentCharacter();
 							Room room = game.getCurrentCharacter().getRoom();
 							List<Room> rooms = game.getBoard().getRooms();
 							for (Room r : rooms) {
@@ -472,9 +472,13 @@ public class Main {
 								for (Location l : game.getCurrentCharacter()
 										.getRoom().doors)
 									l.setAccessible(true);
-							else game.getCurrentCharacter().setPosition(
-									game.getBoard().getStart(game.getCurrentCharacter().token-1));
-							diceImage1.setIcon(null); 
+							else
+								game.getCurrentCharacter()
+										.setPosition(
+												game.getBoard()
+														.getStart(
+																game.getCurrentCharacter().token - 1));
+							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							game.EndTurnNow();
 							game.getBoardCanvas().repaint();
@@ -498,7 +502,7 @@ public class Main {
 								for (Location l : game.getCurrentCharacter()
 										.getRoom().doors)
 									l.setAccessible(true);
-							diceImage1.setIcon(null); 
+							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							game.EndTurnNow();
 							game.getBoardCanvas().repaint();
@@ -523,7 +527,7 @@ public class Main {
 									for (Location l : game
 											.getCurrentCharacter().getRoom().doors)
 										l.setAccessible(true);
-								diceImage1.setIcon(null); 
+								diceImage1.setIcon(null);
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
@@ -549,7 +553,7 @@ public class Main {
 									for (Location l : game
 											.getCurrentCharacter().getRoom().doors)
 										l.setAccessible(true);
-								diceImage1.setIcon(null); 
+								diceImage1.setIcon(null);
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
@@ -665,12 +669,9 @@ public class Main {
 												"GET A ROOM! (Pro Tip: Enter a room to make a Suggestion!)");
 							return;
 						}
-						Queue<gameObjects.Character> characters = game
-								.getTurnOrder();
-						gameObjects.Character SUGGESTINGPlayer = game
-								.getCurrentCharacter();
-						gameObjects.Character currentPlayer = game
-								.getCurrentCharacter();
+						Queue<Character> characters = game.getTurnOrder();
+						Character SUGGESTINGPlayer = game.getCurrentCharacter();
+						Character currentPlayer = game.getCurrentCharacter();
 						if (SUGGESTINGPlayer.isSuggestionMade()
 								|| !game.getPossibleActions().contains(
 										GameState.TurnState.MAKE_SUGGESTION)) {
@@ -730,7 +731,7 @@ public class Main {
 								}
 							}
 							if (accuesed.isCharacter()) {
-								gameObjects.Character a = (gameObjects.Character) accuesed;
+								Character a = (Character) accuesed;
 								a.setSuggestionMade(false);
 							}
 						}
@@ -795,7 +796,7 @@ public class Main {
 						currentPlayer = game.getCurrentCharacter();
 						boolean refuted = false;
 						Card refutingCard = null;
-						gameObjects.Character refutingChar = null;
+						Character refutingChar = null;
 						while (!SUGGESTINGPlayer.equals(currentPlayer)
 								&& !refuted) {
 							Set<Card> hand = currentPlayer.getHand();
@@ -981,8 +982,8 @@ public class Main {
 		}
 
 	}
-	
-	public int askTotalPlayer(){
+
+	public int askTotalPlayer() {
 		int playerNum = 0;
 		while (playerNum == 0) {
 			String s = JOptionPane
@@ -991,9 +992,8 @@ public class Main {
 				playerNum = Integer.parseInt(s);
 				GameState.expectedNumPlayers = playerNum;
 				if (playerNum < 3 || playerNum > 6) {
-					JOptionPane
-							.showMessageDialog(null,
-									"Please choose a number 3 - 6 (inclusive).");
+					JOptionPane.showMessageDialog(null,
+							"Please choose a number 3 - 6 (inclusive).");
 					playerNum = 0;
 				}
 			} catch (NumberFormatException ex) {
@@ -1022,8 +1022,8 @@ public class Main {
 						rollDiceButton.setEnabled(true);
 						usePassageButton.setEnabled(true);
 						suggestButton.setEnabled(true);
-						final List<gameObjects.Character> characters = new ArrayList<>();
-						final Queue<gameObjects.Character> startOrder = new ArrayDeque<>();
+						final List<Character> characters = new ArrayList<>();
+						final Queue<Character> startOrder = new ArrayDeque<>();
 						int playerNum = askTotalPlayer();
 
 						GameState.expectedNumPlayers = playerNum;
@@ -1131,7 +1131,7 @@ public class Main {
 												.showMessageDialog(null,
 														"Please enter your name and choose a character.");
 									else {
-										for (gameObjects.Character c : characters) {
+										for (Character c : characters) {
 											int i = c.token;
 											if (Integer.parseInt(label2
 													.getText()
@@ -1167,14 +1167,10 @@ public class Main {
 											}
 										}
 										if (!NO) {
-											characters
-													.add(new gameObjects.Character(
-															field.getText(),
-															Integer.parseInt(label2
-																	.getText()
-																	.substring(
-																			11,
-																			12))));
+											characters.add(new Character(field
+													.getText(), Integer
+													.parseInt(label2.getText()
+															.substring(11, 12))));
 											startOrder.offer(characters
 													.get(characters.size() - 1));
 											frames.remove(frame);
@@ -1227,8 +1223,7 @@ public class Main {
 				}
 			});
 			menu.add(fileMenuItem);
-		}
-		else if (menu.getText().equals("Options")) {
+		} else if (menu.getText().equals("Options")) {
 			JMenuItem fileMenuItem = new JMenuItem("Help");
 			fileMenuItem.addActionListener(new ActionListener() {
 				@Override
