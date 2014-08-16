@@ -981,6 +981,30 @@ public class Main {
 		}
 
 	}
+	
+	public int askTotalPlayer(){
+		int playerNum = 0;
+		while (playerNum == 0) {
+			String s = JOptionPane
+					.showInputDialog("Please insert the number of players (3 - 6).");
+			try {
+				playerNum = Integer.parseInt(s);
+				GameState.expectedNumPlayers = playerNum;
+				if (playerNum < 3 || playerNum > 6) {
+					JOptionPane
+							.showMessageDialog(null,
+									"Please choose a number 3 - 6 (inclusive).");
+					playerNum = 0;
+				}
+			} catch (NumberFormatException ex) {
+				playerNum = 0;
+				JOptionPane.showMessageDialog(null,
+						"... I said NUMBER please. A NUMBER from 3 - 6.\n"
+								+ "That means 3, 4, 5 or 6.");
+			}
+		}
+		return playerNum;
+	}
 
 	public void addMenuItems(JMenu menu) {
 		if (menu.getText().equals("File")) {
@@ -1000,26 +1024,7 @@ public class Main {
 						suggestButton.setEnabled(true);
 						final List<gameObjects.Character> characters = new ArrayList<>();
 						final Queue<gameObjects.Character> startOrder = new ArrayDeque<>();
-						int playerNum = 0;
-						while (playerNum == 0) {
-							String s = JOptionPane
-									.showInputDialog("Please insert the number of players (3 - 6).");
-							try {
-								playerNum = Integer.parseInt(s);
-								GameState.expectedNumPlayers = playerNum;
-								if (playerNum < 3 || playerNum > 6) {
-									JOptionPane
-											.showMessageDialog(null,
-													"Please choose a number 3 - 6 (inclusive).");
-									playerNum = 0;
-								}
-							} catch (NumberFormatException ex) {
-								playerNum = 0;
-								JOptionPane.showMessageDialog(null,
-										"... I said NUMBER please. A NUMBER from 3 - 6.\n"
-												+ "That means 3, 4, 5 or 6.");
-							}
-						}
+						int playerNum = askTotalPlayer();
 
 						GameState.expectedNumPlayers = playerNum;
 
