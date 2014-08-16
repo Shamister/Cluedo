@@ -316,7 +316,7 @@ public class Main {
 			diceImage2.setPreferredSize(new Dimension(40, 40));
 
 			dicePanel.add(diceImage2, BorderLayout.EAST);
-			
+
 			subPanel.add(dicePanel, gbc);
 
 			gbc.gridy += 1;
@@ -1211,10 +1211,16 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Pop up dialog to configure the game
+	 */
 	public void options() {
 
 	}
 
+	/**
+	 * Pop up dialog to ask user if he wants to exit the game
+	 */
 	public void confirmExit() {
 		int value = JOptionPane.showConfirmDialog(null,
 				"Do you want to exit the game?", "Exit Confirmation",
