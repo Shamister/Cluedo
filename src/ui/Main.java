@@ -689,25 +689,11 @@ public class Main {
 						String weapon = (String) weaponCB.getSelectedItem();
 						// MOVE CHARACTER
 						int token = 0;
-						switch (character) {
-						case "Miss Scarlett":
-							token = 1;
-							break;
-						case "Colonel Mustard":
-							token = 2;
-							break;
-						case "Mrs White":
-							token = 3;
-							break;
-						case "The Reverand Green":
-							token = 4;
-							break;
-						case "Mrs Peacock":
-							token = 5;
-							break;
-						case "Professor Plum":
-							token = 6;
-							break;
+						for (int i = 0; i < Data.charNames.length; i++) {
+							if (character.equals(Data.charNames[i])) {
+								token = i + 1;
+								break;
+							}
 						}
 						Piece accuesed = null;
 						for (Piece p : game.getBoard().getPiece()) {
