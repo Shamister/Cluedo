@@ -21,14 +21,18 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -53,6 +57,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import control.GameState;
 
@@ -90,7 +96,7 @@ public class Main {
 			accuseButton;
 
 	// comboBox fields here
-	JComboBox charCB, weaponCB, roomCB;
+	JComboBox<String> charCB, weaponCB, roomCB;
 
 	// image panel fields here
 	JLabel charImage, weaponImage, roomImage, diceImage1, diceImage2;
@@ -99,12 +105,13 @@ public class Main {
 	private final int CARD_HEIGHT = 135;
 	
 	// Card image JLabel fields here
-	private Set<JLabel> playerHand;
+	private Set<JLabel> playerHand = new HashSet<>();
 
 	BufferedImage img;
 
 	Frame frame;
 	GameState game;
+	JTabbedPane tabbedPane;
 
 	JFrame dataFrame;
 	JTextArea dataTextArea;
@@ -117,7 +124,7 @@ public class Main {
 				/**
 				 * FRAME
 				 */
-				frame = new Frame(".:CLUEDO:.");
+				frame = new Frame(title);
 
 				// set look and feel
 				setLookAndFeel();
@@ -241,7 +248,7 @@ public class Main {
 				/**
 				 * TABBED PANE
 				 */
-				JTabbedPane tabbedPane = new JTabbedPane();
+				tabbedPane = new JTabbedPane();
 				tabbedPane.setPreferredSize(new Dimension(328, WINDOW_HEIGHT));
 
 				JPanel tabPanel = addTabPanel("Status");
@@ -251,8 +258,17 @@ public class Main {
 				tabbedPane.addTab("Cards", tabPanel);
 
 				tabPanel = addTabPanel("Actions");
-				tabbedPane.addTab("Actions", tabPanel);
-
+				tabbedPane.addTab("Actions", tabPanel);				
+				
+				tabbedPane.addChangeListener(new ChangeListener() {
+					@Override
+					public void stateChanged(ChangeEvent e) {
+						if (tabbedPane.getSelectedIndex() == 1)
+							tabbedPane.setComponentAt(1, addTabPanel("Cards"));
+						System.out.println("CHANGED TAB!");
+					}
+				});
+				
 				controlPanel.add(tabbedPane, BorderLayout.WEST);
 				// The following line enables to use scrolling tabs.
 				tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -576,10 +592,11 @@ public class Main {
 			subPanel.add(endTurnButton, gbc);
 			panel.add(subPanel);
 
-		} else if (text.equals("Cards")) {//FIXME: ADD THE HAND!!
-			//FIXME: ADD THE HAND!!
-			if (game != null && game.getTurnOrder() != null && game.getCurrentCharacter() != null){
-				//playerHand.clear();
+		} else if (text.equals("Cards")) {
+			//FIXME: CARDS WON'T DRAW!!
+			if (game != null && game.getTurnOrder() != null && 
+					!game.getTurnOrder().isEmpty() && game.getCurrentCharacter() != null){
+				playerHand.clear();
 				List<Card> hand = game.getCurrentCharacter().getHand();
 				JPanel subPanel = new JPanel();
 				// sub panel
@@ -616,6 +633,9 @@ public class Main {
 						type = "ioyhbefvolberouyb";
 						break;
 					}
+					System.out.println(this.getClass()
+							.getResource(imagePath + "cards/" + type + "/" + cardName 
+									+ ".png"));
 					ImageIcon ii = new ImageIcon(this.getClass()
 							.getResource(
 									imagePath + "cards/" + type + "/" + cardName
@@ -623,12 +643,14 @@ public class Main {
 					label.setIcon(ii);
 					label.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
 					subPanel.add(label, gbc);
-		
+					label.setVisible(true);
+					subPanel.repaint();
+					
 					gbc.gridy += 1;
 				}
 			}
 			
-			//FIXME: ADD THE HAND!!
+			//FIXME: CARDS WON'T DRAW!!
 
 		} else if (text.equals("Actions")) {
 			JPanel subPanel = new JPanel();
@@ -647,7 +669,7 @@ public class Main {
 
 			gbc.gridy += 1;
 
-			charCB = new JComboBox<Object>(Data.charNames);
+			charCB = new JComboBox<String>(Data.charNames);
 			charCB.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -670,7 +692,7 @@ public class Main {
 
 			gbc.gridy += 1;
 
-			weaponCB = new JComboBox<Object>(Data.weaponNames);
+			weaponCB = new JComboBox<String>(Data.weaponNames);
 			weaponCB.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -693,7 +715,7 @@ public class Main {
 
 			gbc.gridy += 1;
 
-			roomCB = new JComboBox<Object>(Data.roomNames);
+			roomCB = new JComboBox<String>(Data.roomNames);
 			roomCB.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
