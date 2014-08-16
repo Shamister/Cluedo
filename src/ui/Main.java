@@ -90,7 +90,7 @@ public class Main {
 	JComboBox charCB, weaponCB, roomCB;
 
 	// image panel fields here
-	JLabel charImage, weaponImage, roomImage;
+	JLabel charImage, weaponImage, roomImage, diceImage1, diceImage2;
 
 	private final int CARD_WIDTH = 86;
 	private final int CARD_HEIGHT = 135;
@@ -302,6 +302,25 @@ public class Main {
 			gbc.ipadx = 80;
 			gbc.gridy = 0;
 
+			JPanel dicePanel = new JPanel();
+
+			// dice image
+			diceImage1 = new JLabel();
+			diceImage1.setHorizontalAlignment(JLabel.CENTER);
+			diceImage1.setPreferredSize(new Dimension(40, 40));
+
+			dicePanel.add(diceImage1, BorderLayout.WEST);
+
+			diceImage2 = new JLabel();
+			diceImage2.setHorizontalAlignment(JLabel.CENTER);
+			diceImage2.setPreferredSize(new Dimension(40, 40));
+
+			dicePanel.add(diceImage2, BorderLayout.EAST);
+			
+			subPanel.add(dicePanel, gbc);
+
+			gbc.gridy += 1;
+
 			// roll dice button
 			rollDiceButton = new JButton("Roll Dice");
 			rollDiceButton.addActionListener(new ActionListener() {
@@ -325,6 +344,9 @@ public class Main {
 						else
 							i = (int) (2 + Math.round(Math.random() * 10));
 						game.getBoard().setMovementAllowed(i);
+						// show dice
+						showDice(i);
+
 						System.out.println("Number of spaces you can move = "
 								+ i);
 						if (!game.getCurrentCharacter().isInRoom()) {
@@ -890,13 +912,31 @@ public class Main {
 		return panel;
 	}
 
+	public void showDice(int i) {
+		if (i > 0) {
+			if (i <= 6) {
+				ImageIcon ii = new ImageIcon(this.getClass().getResource(
+						imagePath + "dice/" + i + ".png"));
+				diceImage1.setIcon(ii);
+			} else {
+				ImageIcon ii = new ImageIcon(this.getClass().getResource(
+						imagePath + "dice/" + 6 + ".png"));
+				diceImage1.setIcon(ii);
+				ii = new ImageIcon(this.getClass().getResource(
+						imagePath + "dice/" + i % 6 + ".png"));
+				diceImage2.setIcon(ii);
+			}
+		}
+	}
+
 	public void selectChar() {
 		String name = (String) charCB.getSelectedItem();
 		for (int i = 0; i < Data.charNames.length; i++) {
 			if (name.equals(Data.charNames[i])) {
-				ImageIcon ii = new ImageIcon(this.getClass().getResource(
-						imagePath + "/cards/chars/" + Data.charNames[i]
-								+ ".png"));
+				ImageIcon ii = new ImageIcon(this.getClass()
+						.getResource(
+								imagePath + "cards/chars/" + Data.charNames[i]
+										+ ".png"));
 				charImage.setIcon(ii);
 			}
 		}
@@ -907,7 +947,7 @@ public class Main {
 		for (int i = 0; i < Data.weaponNames.length; i++) {
 			if (name.equals(Data.weaponNames[i])) {
 				ImageIcon ii = new ImageIcon(this.getClass().getResource(
-						imagePath + "/cards/weapons/" + Data.weaponNames[i]
+						imagePath + "cards/weapons/" + Data.weaponNames[i]
 								+ ".jpg"));
 				weaponImage.setIcon(ii);
 			}
@@ -915,6 +955,16 @@ public class Main {
 	}
 
 	public void selectRoom() {
+		String name = (String) roomCB.getSelectedItem();
+		for (int i = 0; i < Data.roomNames.length; i++) {
+			if (name.equals(Data.roomNames[i])) {
+				ImageIcon ii = new ImageIcon(this.getClass()
+						.getResource(
+								imagePath + "cards/rooms/" + Data.roomNames[i]
+										+ ".png"));
+				roomImage.setIcon(ii);
+			}
+		}
 
 	}
 
@@ -1165,9 +1215,6 @@ public class Main {
 
 	}
 
-	/**
-	 * Pop up the confirm dialog asking user if he wants to exit the game
-	 */
 	public void confirmExit() {
 		int value = JOptionPane.showConfirmDialog(null,
 				"Do you want to exit the game?", "Exit Confirmation",
