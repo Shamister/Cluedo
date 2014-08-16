@@ -103,6 +103,9 @@ public class Main {
 	Frame frame;
 	GameState game;
 
+	JFrame dataFrame;
+	JTextArea dataTextArea;
+	
 	public Main() {
 
 		EventQueue.invokeLater(new Runnable() {
@@ -480,6 +483,9 @@ public class Main {
 																game.getCurrentCharacter().token - 1));
 							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
+							if (dataFrame != null)
+								dataFrame.dispose();
+							dataFrame = null;
 							game.EndTurnNow();
 							game.getBoardCanvas().repaint();
 							return;
@@ -801,7 +807,7 @@ public class Main {
 									+ character.toUpperCase()
 									+ " with the " + weapon.toUpperCase() + "!";
 						JOptionPane.showMessageDialog(null, Dialoge);
-						currentPlayer.setData(Dialoge);
+						SUGGESTINGPlayer.setData(Dialoge);
 						game.goThroughTurn(GameState.TurnState.MAKE_SUGGESTION);
 						game.goThroughTurn(GameState.TurnState.MOVE_VIA_DICE);
 						game.goThroughTurn(GameState.TurnState.MOVE_VIA_SP);
@@ -809,6 +815,8 @@ public class Main {
 								.getCurrentCharacter())) {
 							characters.offer(characters.poll());
 						}
+						if (dataTextArea != null)
+							dataTextArea.setText(SUGGESTINGPlayer.getData());
 					}
 				}
 			});
@@ -1169,8 +1177,10 @@ public class Main {
 					textArea.setWrapStyleWord(true);
 					frame.setContentPane(scrollPane);
 					frame.setResizable(false);
+					
 					textArea.setText(Data.helpDes);
-
+					textArea.setCaretPosition(0);
+					
 					frame.pack();
 					frame.setVisible(true);
 				}
@@ -1181,7 +1191,38 @@ public class Main {
 			fileMenuItem.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// Show Data
+					if (game != null && !game.getTurnOrder().isEmpty() && game.getCurrentCharacter() != null){ 
+						Character c = game.getCurrentCharacter();
+						
+						final JFrame frame = new JFrame(c.name + "'s Notes");
+						frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+						frame.addWindowListener(new WindowAdapter() {
+							@Override
+							public void windowClosing(WindowEvent e) {
+								dataFrame = null;
+								dataTextArea = null;
+								frame.dispose();
+							}
+						});
+						frame.setPreferredSize(new Dimension(300, 600));
+						frame.setLocationRelativeTo(null);
+						JTextArea textArea = new JTextArea();
+						JScrollPane scrollPane = new JScrollPane(textArea);
+						textArea.setEditable(false);
+						textArea.setLineWrap(true);
+						textArea.setWrapStyleWord(true);
+						frame.setContentPane(scrollPane);
+						frame.setResizable(false);
+						
+						textArea.setText(c.getData());
+						textArea.setCaretPosition(0);
+						
+						frame.pack();
+						frame.setVisible(true);
+						dataFrame = frame;
+						dataTextArea = textArea;
+					
+					}
 				}
 			});
 			menu.add(fileMenuItem);
