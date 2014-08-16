@@ -191,6 +191,8 @@ public class Main {
 				 * OPTIONS MENU
 				 */
 				menu = new JMenu("Options");
+				// add menu items to options menu
+				addMenuItems(menu);
 				// add menu to options menu bar
 				menuBar.add(menu);
 
@@ -1235,14 +1237,16 @@ public class Main {
 					textArea.setEditable(false);
 					textArea.setWrapStyleWord(true);
 					frame.setContentPane(scrollPane);
+					frame.setResizable(false);
 					textArea.setText("Overview:\n        Cluedo is a basically a \"whodunnit?\" game.\nGoal:\n        "
-							+ "The goal of Cluedo is to solve a murder mystery.\nTo do this, you must go around the board and "
-							+ "make suggestions about the facts of the case: The Room the murder happened in, The Weapon used to "
-							+ "kill the victim, and the Character responsible. Then your opponents must try to disprove your "
-							+ "suggestion.\nIf they can't then you may have found the facts!\nEventually, you'll want to make an "
-							+ "accusation regarding a Room, a Weapon and a Character. But watch out! Accusations are far more "
-							+ "serious than mere suggestions - get even ONE fact wrong and you're eliminated!"
-							+ "\n");
+							+ "The goal of Cluedo is to solve a murder\nmystery. To do this, you must go around the\nboard and "
+							+ "make suggestions about the facts of\nthe case: The Room the murder happened in,\nThe Weapon used to "
+							+ "kill the victim, and the\nCharacter responsible. Then your opponents\nmust try to disprove your "
+							+ "suggestion.\n\nIf they can't, then you may have found the facts!\n\nEventually, you'll want to make "
+							+ "an accusation\nregarding a Room, a Weapon and a Character.\nBut watch out! Accusations are far more "
+							+ "serious\nthan mere suggestions - get even ONE fact wrong\nand you're off the case (eliminated)!\n"
+							+ "Starting Off:\n        To start a game, you will need to click on <File>, then on <New Game>."
+							+ "You will always be asked if you want ");
 					frame.pack();
 					frame.setVisible(true);
 				}
