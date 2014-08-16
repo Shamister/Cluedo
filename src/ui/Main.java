@@ -898,6 +898,10 @@ public class Main {
 		return panel;
 	}
 
+	/**
+	 * show dice image when user rolled the dice
+	 * @param i total number of dices
+	 */
 	public void showDice(int i) {
 		if (i > 0) {
 			if (i <= 6) {
@@ -915,6 +919,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Show character card selected in Action Tab
+	 */
 	public void selectChar() {
 		String name = (String) charCB.getSelectedItem();
 		for (int i = 0; i < Data.charNames.length; i++) {
@@ -928,6 +935,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Show weapon card selected in Action Tab
+	 */
 	public void selectWeapon() {
 		String name = (String) weaponCB.getSelectedItem();
 		for (int i = 0; i < Data.weaponNames.length; i++) {
@@ -940,6 +950,9 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Show room card selected in Action Tab
+	 */
 	public void selectRoom() {
 		String name = (String) roomCB.getSelectedItem();
 		for (int i = 0; i < Data.roomNames.length; i++) {
@@ -954,6 +967,10 @@ public class Main {
 
 	}
 
+	/**
+	 * Pop up dialog to ask total players participating the game
+	 * @return the total players
+	 */
 	public int askTotalPlayer() {
 		int playerNum = 0;
 		while (playerNum == 0) {
@@ -977,6 +994,11 @@ public class Main {
 		return playerNum;
 	}
 
+	/**
+	 * Ask each player name and character playing the game
+	 * @param playerNum total player participating
+	 * @return Queue of character playing
+	 */
 	public Queue<Character> askPlayerDetails(int playerNum) {
 		final List<JFrame> frames = new ArrayList<>();
 		final List<Character> characters = new ArrayList<>();
@@ -1141,6 +1163,10 @@ public class Main {
 		return startOrder;
 	}
 
+	/**
+	 * This method is adding items to menu bar
+	 * @param menu the menu bar of the main game
+	 */
 	public void addMenuItems(JMenu menu) {
 		if (menu.getText().equals("File")) {
 			JMenuItem fileMenuItem = new JMenuItem("New Game");
