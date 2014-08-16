@@ -468,6 +468,10 @@ public class Main {
 								for (Location l : game.getCurrentCharacter()
 										.getRoom().doors)
 									l.setAccessible(true);
+							else game.getCurrentCharacter().setPosition(
+									game.getBoard().getStart(game.getCurrentCharacter().token-1));
+							diceImage1.setIcon(null); 
+							diceImage2.setIcon(null);
 							game.EndTurnNow();
 							game.getBoardCanvas().repaint();
 							return;
@@ -490,6 +494,8 @@ public class Main {
 								for (Location l : game.getCurrentCharacter()
 										.getRoom().doors)
 									l.setAccessible(true);
+							diceImage1.setIcon(null); 
+							diceImage2.setIcon(null);
 							game.EndTurnNow();
 							game.getBoardCanvas().repaint();
 						} else if (value == 0
@@ -513,6 +519,8 @@ public class Main {
 									for (Location l : game
 											.getCurrentCharacter().getRoom().doors)
 										l.setAccessible(true);
+								diceImage1.setIcon(null); 
+								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
 								return;
@@ -537,6 +545,8 @@ public class Main {
 									for (Location l : game
 											.getCurrentCharacter().getRoom().doors)
 										l.setAccessible(true);
+								diceImage1.setIcon(null); 
+								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
 								return;
