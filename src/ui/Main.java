@@ -1225,37 +1225,56 @@ public class Main {
 					JTextArea textArea = new JTextArea();
 					JScrollPane scrollPane = new JScrollPane(textArea);
 					textArea.setEditable(false);
+					textArea.setLineWrap(true);
 					textArea.setWrapStyleWord(true);
 					frame.setContentPane(scrollPane);
 					frame.setResizable(false);
 					textArea.setText(
 							"Overview:\n        Cluedo is a basically a \"whodunnit?\" game.\n\n"
 							
-							+ "Goal:\n        The goal of Cluedo is to solve a murder\nmystery. To do this, you must go around "
-							+ "the\nboard and make suggestions about the facts of\nthe case: The Room the murder happened in,\n"
-							+ "The Weapon used to kill the victim, and the\nCharacter responsible. Then your opponents\nmust try "
+							+ "Goal:\n        The goal of Cluedo is to solve a murder mystery. To do this, you must go around "
+							+ "the board and make suggestions about the facts of the case: The Room the murder happened in, "
+							+ "The Weapon used to kill the victim, and the Character responsible. Then your opponents must try "
 							+ "to disprove your suggestion.\n\nIf they can't, then you may have found the facts!\n\nEventually, "
-							+ "you'll want to make an accusation\nregarding a Room, a Weapon and a Character.\nBut watch out! "
-							+ "Accusations are far more serious\nthan mere suggestions - get even ONE fact wrong\nand you're off "
+							+ "you'll want to make an accusation regarding a Room, a Weapon and a Character. But watch out! "
+							+ "Accusations are far more serious than mere suggestions - get even ONE fact wrong and you're off "
 							+ "the case (eliminated)!\n\n"
 							
-							+ "Starting Off:\n        To start a game, you will need to click on\n<File>, then on <New Game> "
-							+ "(You will always be\nasked if you want start a new game - deal with it),\nthen enter a number "
-							+ "between 3 and 6 (inclusive)\nto decide on the number of players. After that, a\nnumber of "
-							+ "frames corresponding to the number\nyou entered will pop up - You MUST enter a name\nand choose a "
-							+ "Character. Once everyone's chosen\na Character (and you've gotten the blood out of the\ncarpet), "
+							+ "Starting Off:\n        To start a game, you will need to click on <File>, then on <New Game> "
+							+ "(You will always be asked if you want start a new game - deal with it), then enter a number "
+							+ "between 3 and 6 (inclusive) to decide on the number of players. After that, a number of "
+							+ "frames corresponding to the number you entered will pop up - You MUST enter a name and choose a "
+							+ "Character. Once everyone's chosen a Character (and you've gotten the blood out of the carpet), "
 							+ "you can play!\n\n"
 							
-							+ "Gameplay - Squares and You:\n        Squares are colour-coded to mean different\nthings:\n\n"
-							+ "RED squares are doors - moving onto them\nallows you to enter a room.\n        SOME doors are on "
-							+ "corners - in this case, you\ncan only enter from directly underneath or above\nthem.\n\n"
-							+ "BLUE squares represent Rooms - you can only\nenter them through a DOOR (RED).\n\n"
+							+ "Gameplay - Squares and You:\n        Squares are colour-coded to mean different things:\n\n"
+							+ "RED squares are doors - moving onto them allows you to enter a room.\n        SOME doors are on "
+							+ "corners - in this case, you can only enter from directly underneath or above them.\n"
+							+ "BLUE squares represent Rooms - you can only enter them through a DOOR (RED).\n"
+							+ "BROWN squares are Inaccessible areas. You can't move there.\n"
+							+ "BLACK squares and WHITE squares are other Pieces. The WHITE one is the one that's moving.\n\n"
 							
-							+ "Gameplay - MOVEMENT:\n        There are two ways to move. ONE way is to\nroll the dice (by clicking "
-							+ "the button), OR you can\nuse a secret passage.\n\n"
+							+ "Gameplay - MOVEMENT:\n        There are two ways to move. ONE way is to roll the dice (by clicking "
+							+ "the button), OR you can use a Secret Passage.\n\n"
+							
 							+ "Using and moving with the dice:\n        If you decide to roll the dice, the highlighted "
 							+ "squares on the board show you where you can move - the dice above the buttons show you how many "
-							+ "spaces you can move."
+							+ "spaces you can move. You CANNOT move through people - only around them!!\n\n"
+							
+							+ "Using and moving with Secret Passages:\n        If you decide to use a Secret Passage, you will "
+							+ "be asked if you're serious. If you are, you'll be moved to the room diagonally opposite you. "
+							+ "ONLY CORNER ROOMS have Secret Passages!\n\n"
+							
+							+ "Gameplay - Making Suggestions:\n        Two win, you need to CORRECTLY guess ALL 3 facts about "
+							+ "the case. But there are a LOT of possibilities - to eliminate them, you go to a room and make "
+							+ "a suggestion involving that room, a weapon and a character. At the start of the game you were dealt "
+							+ "between 3 and 6 cards (depending on the number of players). 3 other cards were put aside in an "
+							+ "envelope - these are the facts you must deduce. SO, when you make a suggestion, and an opponent "
+							+ "shows you a card, it CANNOT be a possibility. This is how you narrow possibilities!\n"
+							+ "        We've actually taken the liberty of recording the results of your suggestions for you."
+							+ "To see these notes, please click on <Options>, then <Show Data>. This will only show the current "
+							+ "player's notes though.\n\n"
+
 							);
 					
 					frame.pack();
