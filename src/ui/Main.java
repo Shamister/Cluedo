@@ -46,7 +46,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -1215,6 +1217,43 @@ public class Main {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// load game
+				}
+			});
+			menu.add(fileMenuItem);
+		}
+		else if (menu.getText().equals("Options")) {
+			JMenuItem fileMenuItem = new JMenuItem("Help");
+			fileMenuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final JFrame frame = new JFrame("HELP!!");
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.setPreferredSize(new Dimension(300, 300));
+					frame.setLocationRelativeTo(null);
+					JTextArea textArea = new JTextArea(20, 20);
+					JScrollPane scrollPane = new JScrollPane(textArea);
+					textArea.setEditable(false);
+					textArea.setWrapStyleWord(true);
+					frame.setContentPane(scrollPane);
+					textArea.setText("Overview:\n        Cluedo is a basically a \"whodunnit?\" game.\nGoal:\n        "
+							+ "The goal of Cluedo is to solve a murder mystery.\nTo do this, you must go around the board and "
+							+ "make suggestions about the facts of the case: The Room the murder happened in, The Weapon used to "
+							+ "kill the victim, and the Character responsible. Then your opponents must try to disprove your "
+							+ "suggestion.\nIf they can't then you may have found the facts!\nEventually, you'll want to make an "
+							+ "accusation regarding a Room, a Weapon and a Character. But watch out! Accusations are far more "
+							+ "serious than mere suggestions - get even ONE fact wrong and you're eliminated!"
+							+ "\n");
+					frame.pack();
+					frame.setVisible(true);
+				}
+			});
+			menu.add(fileMenuItem);
+
+			fileMenuItem = new JMenuItem("Show Data");
+			fileMenuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// Show Data
 				}
 			});
 			menu.add(fileMenuItem);
