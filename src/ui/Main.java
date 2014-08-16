@@ -1230,23 +1230,44 @@ public class Main {
 				public void actionPerformed(ActionEvent e) {
 					final JFrame frame = new JFrame("HELP!!");
 					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-					frame.setPreferredSize(new Dimension(300, 300));
+					frame.setPreferredSize(new Dimension(300, 600));
 					frame.setLocationRelativeTo(null);
-					JTextArea textArea = new JTextArea(20, 20);
+					JTextArea textArea = new JTextArea();
 					JScrollPane scrollPane = new JScrollPane(textArea);
 					textArea.setEditable(false);
 					textArea.setWrapStyleWord(true);
 					frame.setContentPane(scrollPane);
 					frame.setResizable(false);
-					textArea.setText("Overview:\n        Cluedo is a basically a \"whodunnit?\" game.\nGoal:\n        "
-							+ "The goal of Cluedo is to solve a murder\nmystery. To do this, you must go around the\nboard and "
-							+ "make suggestions about the facts of\nthe case: The Room the murder happened in,\nThe Weapon used to "
-							+ "kill the victim, and the\nCharacter responsible. Then your opponents\nmust try to disprove your "
-							+ "suggestion.\n\nIf they can't, then you may have found the facts!\n\nEventually, you'll want to make "
-							+ "an accusation\nregarding a Room, a Weapon and a Character.\nBut watch out! Accusations are far more "
-							+ "serious\nthan mere suggestions - get even ONE fact wrong\nand you're off the case (eliminated)!\n"
-							+ "Starting Off:\n        To start a game, you will need to click on <File>, then on <New Game>."
-							+ "You will always be asked if you want ");
+					textArea.setText(
+							"Overview:\n        Cluedo is a basically a \"whodunnit?\" game.\n\n"
+							
+							+ "Goal:\n        The goal of Cluedo is to solve a murder\nmystery. To do this, you must go around "
+							+ "the\nboard and make suggestions about the facts of\nthe case: The Room the murder happened in,\n"
+							+ "The Weapon used to kill the victim, and the\nCharacter responsible. Then your opponents\nmust try "
+							+ "to disprove your suggestion.\n\nIf they can't, then you may have found the facts!\n\nEventually, "
+							+ "you'll want to make an accusation\nregarding a Room, a Weapon and a Character.\nBut watch out! "
+							+ "Accusations are far more serious\nthan mere suggestions - get even ONE fact wrong\nand you're off "
+							+ "the case (eliminated)!\n\n"
+							
+							+ "Starting Off:\n        To start a game, you will need to click on\n<File>, then on <New Game> "
+							+ "(You will always be\nasked if you want start a new game - deal with it),\nthen enter a number "
+							+ "between 3 and 6 (inclusive)\nto decide on the number of players. After that, a\nnumber of "
+							+ "frames corresponding to the number\nyou entered will pop up - You MUST enter a name\nand choose a "
+							+ "Character. Once everyone's chosen\na Character (and you've gotten the blood out of the\ncarpet), "
+							+ "you can play!\n\n"
+							
+							+ "Gameplay - Squares and You:\n        Squares are colour-coded to mean different\nthings:\n\n"
+							+ "RED squares are doors - moving onto them\nallows you to enter a room.\n        SOME doors are on "
+							+ "corners - in this case, you\ncan only enter from directly underneath or above\nthem.\n\n"
+							+ "BLUE squares represent Rooms - you can only\nenter them through a DOOR (RED).\n\n"
+							
+							+ "Gameplay - MOVEMENT:\n        There are two ways to move. ONE way is to\nroll the dice (by clicking "
+							+ "the button), OR you can\nuse a secret passage.\n\n"
+							+ "Using and moving with the dice:\n        If you decide to roll the dice, the highlighted "
+							+ "squares on the board show you where you can move - the dice above the buttons show you how many "
+							+ "spaces you can move."
+							);
+					
 					frame.pack();
 					frame.setVisible(true);
 				}
