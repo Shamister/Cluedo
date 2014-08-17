@@ -398,8 +398,6 @@ public class Main {
 						// show dice
 						showDice(i);
 
-						System.out.println("Number of spaces you can move = "
-								+ i);
 						if (!game.getCurrentCharacter().isInRoom()) {
 							List<Location> locs = game.getBoard().getMoves(
 									game.getCurrentCharacter(), i);
@@ -536,6 +534,12 @@ public class Main {
 							}
 							else
 								game.getBoardCanvas().repaint();
+							tabbedPane.setComponentAt(0, addTabPanel("Status"));
+							
+							if (dataFrame != null) dataFrame.dispose();
+							dataFrame = null;
+							dataTextArea = null;
+							
 							return;
 						}
 						int value = JOptionPane.showConfirmDialog(null,
@@ -560,7 +564,14 @@ public class Main {
 							diceImage2.setIcon(null);
 							game.EndTurnNow();
 							game.getBoardCanvas().repaint();
+							tabbedPane.setComponentAt(0, addTabPanel("Status"));
+							
+							if (dataFrame != null) dataFrame.dispose();
+							dataFrame = null;
+							dataTextArea = null;
+							
 							return;
+							
 						} else if (value == 0
 								&& game.getPossibleActions().contains(
 										GameState.TurnState.CHOOSE_SPACE)) {
@@ -586,6 +597,12 @@ public class Main {
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
+								tabbedPane.setComponentAt(0, addTabPanel("Status"));
+								
+								if (dataFrame != null) dataFrame.dispose();
+								dataFrame = null;
+								dataTextArea = null;
+								
 								return;
 							}
 						} else if (value == 0
@@ -612,6 +629,12 @@ public class Main {
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
+								tabbedPane.setComponentAt(0, addTabPanel("Status"));
+								
+								if (dataFrame != null) dataFrame.dispose();
+								dataFrame = null;
+								dataTextArea = null;
+								
 								return;
 							}
 						}
@@ -892,7 +915,6 @@ public class Main {
 								&& !refuted) {
 							List<Card> hand = currentPlayer.getHand();
 							for (Card c : hand) {
-								System.out.println(c);
 								if (c.getCardName().equals(room)
 										|| c.getCardName().equals(weapon)
 										|| c.getCardName().equals(character)) {
