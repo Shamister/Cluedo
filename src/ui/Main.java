@@ -331,28 +331,34 @@ public class Main {
 			gbc.gridy = 0;
 
 			JPanel playerPanel = new JPanel();
-			
+
 			JLabel playerName = new JLabel();
 			JLabel playerImage = new JLabel();
-			if (game != null && game.getTurnOrder() != null && 
-					!game.getTurnOrder().isEmpty()){
-				playerName.setText(game.getCurrentCharacter().name + " (" + 
-					Data.charNames[game.getCurrentCharacter().token-1] + ")");
-				
-				ImageIcon ii = new ImageIcon(this.getClass().getResource(
-							imagePath + "cards/chars/" + Data.charNames[game.getCurrentCharacter().token-1]
-									+ ".png"));
+			if (game != null && game.getTurnOrder() != null
+					&& !game.getTurnOrder().isEmpty()) {
+				playerName.setText(game.getCurrentCharacter().name + " ("
+						+ Data.charNames[game.getCurrentCharacter().token - 1]
+						+ ")");
+
+				ImageIcon ii = new ImageIcon(
+						this.getClass()
+								.getResource(
+										imagePath
+												+ "cards/chars/"
+												+ Data.charNames[game
+														.getCurrentCharacter().token - 1]
+												+ ".png"));
 				playerImage.setIcon(ii);
 			}
 			playerPanel.add(playerName);
 			subPanel.add(playerPanel, gbc);
 			gbc.gridy += 1;
-			
+
 			playerPanel = new JPanel();
 			playerPanel.add(playerImage);
 			subPanel.add(playerPanel, gbc);
 			gbc.gridy += 1;
-			
+
 			JPanel dicePanel = new JPanel();
 
 			// dice image
@@ -517,29 +523,38 @@ public class Main {
 										.getRoom().doors)
 									l.setAccessible(true);
 							else
-								game.getCurrentCharacter().setPosition(game.getBoard()
-											.getStart(game.getCurrentCharacter().token));
+								game.getCurrentCharacter()
+										.setPosition(
+												game.getBoard()
+														.getStart(
+																game.getCurrentCharacter().token));
 							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							if (dataFrame != null)
 								dataFrame.dispose();
 							dataFrame = null;
 							game.EndTurnNow();
-							if (GameState.state == GameState.StateOfGame.GAME_OVER){
-								JOptionPane.showMessageDialog(null, 
-										"Solution was:\nROOM: " + game.getBoard().getEnvelope().getrCard()
-										 + "\nCHARACTER: " + game.getBoard().getEnvelope().getcCard()
-										 + "\nWEAPON: " + game.getBoard().getEnvelope().getwCard());
+							if (GameState.state == GameState.StateOfGame.GAME_OVER) {
+								JOptionPane.showMessageDialog(null,
+										"Solution was:\nROOM: "
+												+ game.getBoard().getEnvelope()
+														.getrCard()
+												+ "\nCHARACTER: "
+												+ game.getBoard().getEnvelope()
+														.getcCard()
+												+ "\nWEAPON: "
+												+ game.getBoard().getEnvelope()
+														.getwCard());
 								System.exit(0);
-							}
-							else
+							} else
 								game.getBoardCanvas().repaint();
 							tabbedPane.setComponentAt(0, addTabPanel("Status"));
-							
-							if (dataFrame != null) dataFrame.dispose();
+
+							if (dataFrame != null)
+								dataFrame.dispose();
 							dataFrame = null;
 							dataTextArea = null;
-							
+
 							return;
 						}
 						int value = JOptionPane.showConfirmDialog(null,
@@ -565,13 +580,14 @@ public class Main {
 							game.EndTurnNow();
 							game.getBoardCanvas().repaint();
 							tabbedPane.setComponentAt(0, addTabPanel("Status"));
-							
-							if (dataFrame != null) dataFrame.dispose();
+
+							if (dataFrame != null)
+								dataFrame.dispose();
 							dataFrame = null;
 							dataTextArea = null;
-							
+
 							return;
-							
+
 						} else if (value == 0
 								&& game.getPossibleActions().contains(
 										GameState.TurnState.CHOOSE_SPACE)) {
@@ -597,12 +613,14 @@ public class Main {
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
-								tabbedPane.setComponentAt(0, addTabPanel("Status"));
-								
-								if (dataFrame != null) dataFrame.dispose();
+								tabbedPane.setComponentAt(0,
+										addTabPanel("Status"));
+
+								if (dataFrame != null)
+									dataFrame.dispose();
 								dataFrame = null;
 								dataTextArea = null;
-								
+
 								return;
 							}
 						} else if (value == 0
@@ -629,12 +647,14 @@ public class Main {
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
 								game.getBoardCanvas().repaint();
-								tabbedPane.setComponentAt(0, addTabPanel("Status"));
-								
-								if (dataFrame != null) dataFrame.dispose();
+								tabbedPane.setComponentAt(0,
+										addTabPanel("Status"));
+
+								if (dataFrame != null)
+									dataFrame.dispose();
 								dataFrame = null;
 								dataTextArea = null;
-								
+
 								return;
 							}
 						}
@@ -1012,17 +1032,26 @@ public class Main {
 									} else {
 										Dialoge = "WRONG!! \n\nYOU HAVE BEEN ELIMINATED!";
 									}
-									JOptionPane.showMessageDialog(null, Dialoge);
+									JOptionPane
+											.showMessageDialog(null, Dialoge);
 									game.goThroughTurn(GameState.TurnState.MAKE_ACCUSATION);
 									if (!correct) {
 										game.eliminateCharacter();
 										endTurnButton.doClick();
-									}
-									else{
-										JOptionPane.showMessageDialog(null, 
-												"Solution was:\nROOM: " + game.getBoard().getEnvelope().getrCard()
-												 + "\nCHARACTER: " + game.getBoard().getEnvelope().getcCard()
-												 + "\nWEAPON: " + game.getBoard().getEnvelope().getwCard());
+									} else {
+										JOptionPane.showMessageDialog(null,
+												"Solution was:\nROOM: "
+														+ game.getBoard()
+																.getEnvelope()
+																.getrCard()
+														+ "\nCHARACTER: "
+														+ game.getBoard()
+																.getEnvelope()
+																.getcCard()
+														+ "\nWEAPON: "
+														+ game.getBoard()
+																.getEnvelope()
+																.getwCard());
 										System.exit(0);
 									}
 								}
@@ -1118,6 +1147,9 @@ public class Main {
 		while (playerNum == 0) {
 			String s = JOptionPane
 					.showInputDialog("Please insert the number of players (3 - 6).");
+			if (s == null) {
+				break;
+			}
 			try {
 				playerNum = Integer.parseInt(s);
 				GameState.expectedNumPlayers = playerNum;
