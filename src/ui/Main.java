@@ -1118,7 +1118,7 @@ public class Main {
 			if (name.equals(Data.weaponNames[i])) {
 				ImageIcon ii = new ImageIcon(this.getClass().getResource(
 						imagePath + "cards/weapons/" + Data.weaponNames[i]
-								+ ".jpg"));
+								+ ".png"));
 				weaponImage.setIcon(ii);
 			}
 		}
