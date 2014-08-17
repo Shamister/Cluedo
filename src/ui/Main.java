@@ -1103,8 +1103,6 @@ public class Main {
 
 		for (int i = 0; i < playerNum; i++) {
 			final JFrame frame = new JFrame("Character Selection");
-			frame.setAlwaysOnTop(true);
-			frame.setAutoRequestFocus(true);
 			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 			frame.setPreferredSize(new Dimension(175, 300));
