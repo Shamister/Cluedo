@@ -182,11 +182,6 @@ public class GameState {
 	 * This is done by offering the turnOrder queue the polled head of itself.
 	 * */
 	public void nextCharactersTurn() {
-		if (this.turnOrder == null || this.turnOrder.isEmpty()){
-			JOptionPane.showMessageDialog(null, "Game Over");
-			endGame();
-			return;
-		}
 		gameObjects.Character cc = getCurrentCharacter();
 		cc.setActive(false);
 		cc.setMovementMade(false);
@@ -278,6 +273,18 @@ public class GameState {
 	public void EndTurnNow(){
 		possibleActions.clear();
 		possibleActions.add(TurnState.END_TURN);
+		boolean stop = true;
+		for (gameObjects.Character c : turnOrder){
+			if (!c.isEliminated()){
+				stop = false;
+				break;
+			}
+		}
+		if (stop){
+			JOptionPane.showMessageDialog(null, "Game Over");
+			endGame();
+			return;
+		}
 		nextCharactersTurn();
 	}
 

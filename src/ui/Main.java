@@ -529,7 +529,10 @@ public class Main {
 							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							game.EndTurnNow();
-							game.getBoardCanvas().repaint();
+							if (GameState.state == GameState.StateOfGame.GAME_OVER)
+								game = new GameState();
+							else
+								game.getBoardCanvas().repaint();
 						} else if (value == 0
 								&& game.getPossibleActions().contains(
 										GameState.TurnState.CHOOSE_SPACE)) {
