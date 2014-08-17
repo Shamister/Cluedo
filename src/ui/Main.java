@@ -1182,7 +1182,7 @@ public class Main {
 		final List<Character> characters = new ArrayList<>();
 		final Queue<Character> order = new ArrayDeque<>();
 
-		for (int i = playerNum; i >= 0; i--) {
+		for (int i = playerNum - 1; i >= 0; i--) {
 			final JFrame frame = new JFrame("Character Selection");
 			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			frame.setResizable(false);
