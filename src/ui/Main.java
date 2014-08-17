@@ -29,10 +29,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -54,8 +52,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import control.GameState;
 
@@ -96,13 +92,14 @@ public class Main {
 	JComboBox<String> charCB, weaponCB, roomCB;
 
 	// image panel fields here
-	JLabel charImage, weaponImage, roomImage, diceImage1, diceImage2;
+	JLabel charImage, weaponImage, roomImage, diceImage1, diceImage2,
+			playerName, playerImage;
 
 	private final int CARD_WIDTH = 86;
 	private final int CARD_HEIGHT = 135;
 
-	// Card image JLabel fields here
-	private Set<JLabel> playerHand = new HashSet<>();
+	// Card image panel field here
+	private JPanel cardPanel;
 
 	BufferedImage img;
 
@@ -257,16 +254,6 @@ public class Main {
 				tabPanel = addTabPanel("Actions");
 				tabbedPane.addTab("Actions", tabPanel);
 
-				tabbedPane.addChangeListener(new ChangeListener() {
-					@Override
-					public void stateChanged(ChangeEvent e) {
-						if (tabbedPane.getSelectedIndex() == 0)
-							tabbedPane.setComponentAt(0, addTabPanel("Status"));
-						else if (tabbedPane.getSelectedIndex() == 1)
-							tabbedPane.setComponentAt(1, addTabPanel("Cards"));
-					}
-				});
-
 				controlPanel.add(tabbedPane, BorderLayout.WEST);
 				// The following line enables to use scrolling tabs.
 				tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -332,24 +319,9 @@ public class Main {
 
 			JPanel playerPanel = new JPanel();
 
-			JLabel playerName = new JLabel();
-			JLabel playerImage = new JLabel();
-			if (game != null && game.getTurnOrder() != null
-					&& !game.getTurnOrder().isEmpty()) {
-				playerName.setText(game.getCurrentCharacter().name + " ("
-						+ Data.charNames[game.getCurrentCharacter().token - 1]
-						+ ")");
+			playerName = new JLabel();
+			playerImage = new JLabel();
 
-				ImageIcon ii = new ImageIcon(
-						this.getClass()
-								.getResource(
-										imagePath
-												+ "cards/chars/"
-												+ Data.charNames[game
-														.getCurrentCharacter().token - 1]
-												+ ".png"));
-				playerImage.setIcon(ii);
-			}
 			playerPanel.add(playerName);
 			subPanel.add(playerPanel, gbc);
 			gbc.gridy += 1;
@@ -522,18 +494,23 @@ public class Main {
 								for (Location l : game.getCurrentCharacter()
 										.getRoom().doors)
 									l.setAccessible(true);
-							else
+							else {
 								game.getCurrentCharacter()
 										.setPosition(
 												game.getBoard()
 														.getStart(
 																game.getCurrentCharacter().token));
+							}
 							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							if (dataFrame != null)
 								dataFrame.dispose();
 							dataFrame = null;
 							game.EndTurnNow();
+
+							showPlayerStatus();
+							showPlayerCards();
+
 							if (GameState.state == GameState.StateOfGame.GAME_OVER) {
 								JOptionPane.showMessageDialog(null,
 										"Solution was:\nROOM: "
@@ -546,9 +523,10 @@ public class Main {
 												+ game.getBoard().getEnvelope()
 														.getwCard());
 								System.exit(0);
-							} else
-								game.getBoardCanvas().repaint();
-							tabbedPane.setComponentAt(0, addTabPanel("Status"));
+							} else {
+								showPlayerStatus();
+								showPlayerCards();
+							}
 
 							if (dataFrame != null)
 								dataFrame.dispose();
@@ -578,8 +556,9 @@ public class Main {
 							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							game.EndTurnNow();
-							game.getBoardCanvas().repaint();
-							tabbedPane.setComponentAt(0, addTabPanel("Status"));
+
+							showPlayerStatus();
+							showPlayerCards();
 
 							if (dataFrame != null)
 								dataFrame.dispose();
@@ -612,9 +591,8 @@ public class Main {
 								diceImage1.setIcon(null);
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
-								game.getBoardCanvas().repaint();
-								tabbedPane.setComponentAt(0,
-										addTabPanel("Status"));
+								showPlayerStatus();
+								showPlayerCards();
 
 								if (dataFrame != null)
 									dataFrame.dispose();
@@ -646,9 +624,9 @@ public class Main {
 								diceImage1.setIcon(null);
 								diceImage2.setIcon(null);
 								game.EndTurnNow();
-								game.getBoardCanvas().repaint();
-								tabbedPane.setComponentAt(0,
-										addTabPanel("Status"));
+
+								showPlayerStatus();
+								showPlayerCards();
 
 								if (dataFrame != null)
 									dataFrame.dispose();
@@ -666,69 +644,11 @@ public class Main {
 			panel.add(subPanel);
 
 		} else if (text.equals("Cards")) {
-			JPanel subPanel = new JPanel();
+			cardPanel = new JPanel();
 			// sub panel
-			subPanel.setLayout(new GridBagLayout());
-			GridBagConstraints gbc = new GridBagConstraints();
-
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			gbc.ipadx = 60;
-			// add padding by 3px
-			gbc.insets = new Insets(3, 0, 0, 0);
-			gbc.gridy = 0;
-
-			if (game != null && game.getTurnOrder() != null
-					&& !game.getTurnOrder().isEmpty()
-					&& game.getCurrentCharacter() != null) {
-				playerHand.clear();
-				List<Card> hand = game.getCurrentCharacter().getHand();
-
-				JLabel label = new JLabel(game.getCurrentCharacter().name
-						+ "'s Cards:");
-				subPanel.add(label, gbc);
-				gbc.gridy += 1;
-
-				for (int i = 0; i < hand.size(); i++) {
-					label = new JLabel();
-					playerHand.add(label);
-					String cardType = hand.get(i).getCardType();
-					String type = null;
-					String cardName = hand.get(i).getCardName();
-					switch (cardType) {
-					case "Character":
-						type = "chars";
-						break;
-					case "Weapon":
-						type = "weapons";
-						break;
-					case "Room":
-						type = "rooms";
-						break;
-					}
-					ImageIcon ii;
-					if (!type.equals("weapons"))
-						ii = new ImageIcon(this.getClass().getResource(
-								imagePath + "cards/" + type + "/" + cardName
-										+ ".png"));
-					else
-						ii = new ImageIcon(this.getClass().getResource(
-								imagePath + "cards/" + type + "/" + cardName
-										+ ".jpg"));
-					label.setIcon(ii);
-					label.setPreferredSize(new Dimension(CARD_WIDTH,
-							CARD_HEIGHT));
-					subPanel.add(label, gbc);
-					label.setVisible(true);
-					subPanel.repaint();
-
-					if (i % 2 == 0) {
-						gbc.gridy += 1;
-						gbc.gridx = 0;
-					} else
-						gbc.gridx += 1;
-				}
-			}
-			panel.add(subPanel);
+			cardPanel = new JPanel();
+			cardPanel.setPreferredSize(new Dimension(328, 600));
+			panel.add(cardPanel, BorderLayout.CENTER);
 		}
 
 		else if (text.equals("Actions")) {
@@ -1067,6 +987,89 @@ public class Main {
 		return panel;
 	}
 
+	public void showPlayerCards() {
+		if (game != null && game.getTurnOrder() != null
+				&& !game.getTurnOrder().isEmpty()
+				&& game.getCurrentCharacter() != null) {
+
+			cardPanel.removeAll();
+			cardPanel.setLayout(new GridBagLayout());
+
+			GridBagConstraints gbc = new GridBagConstraints();
+
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.ipadx = 40;
+			// add padding by 3px
+			gbc.insets = new Insets(40, 0, 0, 0);
+			gbc.gridx = 0;
+			gbc.gridy = 0;
+
+			JLabel label = new JLabel(game.getCurrentCharacter().name
+					+ "'s Cards:");
+			cardPanel.add(label, gbc);
+
+			gbc.gridy += 1;
+
+			List<Card> hand = game.getCurrentCharacter().getHand();
+
+			for (int i = 0; i < hand.size(); i++) {
+				label = new JLabel();
+				String cardType = hand.get(i).getCardType();
+				String type = null;
+				String cardName = hand.get(i).getCardName();
+				// get card type
+				switch (cardType) {
+				case "Character":
+					type = "chars";
+					break;
+				case "Weapon":
+					type = "weapons";
+					break;
+				case "Room":
+					type = "rooms";
+					break;
+				}
+
+				ImageIcon ii = new ImageIcon(this.getClass().getResource(
+						imagePath + "cards/" + type + "/" + cardName + ".png"));
+
+				label.setIcon(ii);
+				label.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
+
+				cardPanel.add(label, gbc);
+
+				if (i % 2 == 0) {
+					gbc.gridx = 1;
+				} else {
+					gbc.gridy += 1;
+					gbc.gridx = 0;
+				}
+			}
+		}
+	}
+
+	/**
+	 * show current player name and character image
+	 */
+	public void showPlayerStatus() {
+		if (game != null && game.getTurnOrder() != null
+				&& !game.getTurnOrder().isEmpty()) {
+			playerName.setText(game.getCurrentCharacter().name + " ("
+					+ Data.charNames[game.getCurrentCharacter().token - 1]
+					+ ")");
+
+			ImageIcon ii = new ImageIcon(
+					this.getClass()
+							.getResource(
+									imagePath
+											+ "cards/chars/"
+											+ Data.charNames[game
+													.getCurrentCharacter().token - 1]
+											+ ".png"));
+			playerImage.setIcon(ii);
+		}
+	}
+
 	/**
 	 * show dice image when user rolled the dice
 	 * 
@@ -1175,19 +1178,34 @@ public class Main {
 	 *            total player participating
 	 * @return Queue of character playing
 	 */
-	public Queue<Character> askPlayerDetails(int playerNum) {
+	public Queue<Character> askPlayerDetails(final int playerNum) {
 		final List<Character> characters = new ArrayList<>();
 		final Queue<Character> order = new ArrayDeque<>();
 
-		for (int i = 0; i < playerNum; i++) {
+		for (int i = playerNum; i >= 0; i--) {
 			final JFrame frame = new JFrame("Character Selection");
 			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			frame.setResizable(false);
 
-			frame.setPreferredSize(new Dimension(175, 300));
+			frame.setPreferredSize(new Dimension(250, 275));
 			frame.setLocationRelativeTo(null);
+
 			JPanel panel = new JPanel();
+			frame.setContentPane(panel);
+
+			panel.setLayout(new GridBagLayout());
+
+			GridBagConstraints gbc = new GridBagConstraints();
+
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.gridx = 0;
+			gbc.gridy = 0;
+
 			final JLabel nameLabel = new JLabel("Name: ");
-			final JLabel charLabel = new JLabel("Character: ");
+
+			panel.add(nameLabel, gbc);
+			gbc.gridy += 1;
+
 			ButtonGroup characterGroup = new ButtonGroup();
 
 			final JTextField field = new JTextField("Player " + (i + 1));
@@ -1198,20 +1216,40 @@ public class Main {
 				}
 			});
 
+			panel.add(field, gbc);
+
+			gbc.gridx = 0;
+			gbc.gridy += 1;
+
+			final JLabel charLabel = new JLabel("Character: ");
+
+			// set fixed size of char label
+			charLabel.setPreferredSize(new Dimension(225, 25));
+			charLabel.setMaximumSize(new Dimension(225, 25));
+			charLabel.setMinimumSize(new Dimension(225, 25));
+
+			panel.add(charLabel, gbc);
+
+			gbc.gridy += 1;
+
 			// create radio button so player can choose character
 			final List<JRadioButton> radioButtons = new ArrayList<JRadioButton>();
 
 			for (int j = 0; j < Data.charNames.length; j++) {
 				JRadioButton radioButton = new JRadioButton(Data.charNames[j]);
-				final int index = j;
+				final int index2 = j;
 				radioButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						charLabel.setText("Character: " + (index + 1) + "("
-								+ Data.charNames[index] + ")");
+						charLabel.setText("Character: " + (index2 + 1) + "("
+								+ Data.charNames[index2] + ")");
 					}
 				});
 				radioButtons.add(radioButton);
+				characterGroup.add(radioButton);
+				panel.add(radioButton, gbc);
+
+				gbc.gridy += 1;
 			}
 
 			JButton okButton = new JButton("OK");
@@ -1252,20 +1290,22 @@ public class Main {
 							order.offer(characters.get(characters.size() - 1));
 							game.createBoard(characters);
 							frame.dispose();
+
+							if (characters.size() == playerNum) {
+								while (game.getCurrentCharacter() == null
+										&& game.getTurnOrder() == null) {
+									// wait
+								}
+								showPlayerStatus();
+								showPlayerCards();
+							}
 						}
 					}
 				}
 			});
-			frame.setContentPane(panel);
-			panel.add(nameLabel);
-			panel.add(field);
-			panel.add(charLabel);
 
-			for (int j = 0; j < radioButtons.size(); j++) {
-				characterGroup.add(radioButtons.get(j));
-				panel.add(radioButtons.get(j));
-			}
-			panel.add(okButton);
+			panel.add(okButton, gbc);
+
 			frame.pack();
 			frame.setVisible(true);
 		}
