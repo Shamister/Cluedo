@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+
 import ui.Board;
 import gameObjects.Character;
+import gameObjects.Data;
 import gameObjects.Location;
 import gameObjects.CARDS.Card;
 
@@ -50,6 +52,29 @@ public class TestSuite {
 		chars = generateCharacters(7);
 		board = new Board(chars);
 		fail("There can be NO MORE THAN 6 characters!");
+	}
+	
+	/**
+	 * Test that Player 1's toString() method works
+	 * */
+	@Test
+	public void character1ToStringWorks() {
+		chars = generateCharacters(6);
+		
+		board = new Board(chars);
+		
+		for (int i = 1; i <= 6; i++){
+			String characterString = "Character: Player " + i + "\nToken: " + Data.charNames[i-1] + 
+					"\nLocation: " + chars.get(i-1).getPosition() + "\nNot in a Room.\n";
+			
+			assertTrue(characterString.equals(chars.get(i-1).toString()));
+			
+			chars.get(i-1).setEliminated(true);
+			characterString = "Character: Player " + i + "\nToken: " + Data.charNames[i-1] + 
+					"\nELIMINATED!!";
+			
+			assertTrue(characterString.equals(chars.get(i-1).toString()));
+		}
 	}
 	
 	/**

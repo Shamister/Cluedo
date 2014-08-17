@@ -987,16 +987,21 @@ public class Main {
 													room, weapon);
 									if (correct) {
 										Dialoge = "CORRECT ON ALL COUNTS! YOU WIN!!";
-										game.endGame();
 									} else {
 										Dialoge = "WRONG!! \n\nYOU HAVE BEEN ELIMINATED!";
 									}
-									JOptionPane
-											.showMessageDialog(null, Dialoge);
+									JOptionPane.showMessageDialog(null, Dialoge);
 									game.goThroughTurn(GameState.TurnState.MAKE_ACCUSATION);
 									if (!correct) {
 										game.eliminateCharacter();
 										endTurnButton.doClick();
+									}
+									else{
+										JOptionPane.showMessageDialog(null, 
+												"Solution was:\nROOM: " + game.getBoard().getEnvelope().getrCard()
+												 + "\nCHARACTER: " + game.getBoard().getEnvelope().getcCard()
+												 + "\nWEAPON: " + game.getBoard().getEnvelope().getwCard());
+										System.exit(0);
 									}
 								}
 							}
