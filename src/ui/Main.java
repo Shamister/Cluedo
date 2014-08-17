@@ -628,9 +628,6 @@ public class Main {
 						type = "rooms";
 						break;
 					}
-					System.out.println(this.getClass()
-							.getResource(imagePath + "cards/" + type + "/" + cardName 
-									+ ".jpg"));
 					ImageIcon ii;
 					if (!type.equals("weapons"))
 						ii = new ImageIcon(this.getClass().getResource(

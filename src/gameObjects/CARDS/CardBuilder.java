@@ -66,7 +66,7 @@ public class CardBuilder {
 	 * A method that makes all of the Room Cards
 	 * */
 	private void buildRoomCards(){
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 9; i++)
 			allCards.add(new Card(Data.roomNames[i], Data.roomDes[i], "Room"));
 	}
 	
