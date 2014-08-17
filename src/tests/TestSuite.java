@@ -185,6 +185,32 @@ public class TestSuite {
 							  +"l l l l l l l - - h h h h h h - - s s s s s s s \n" 
 							  +"X X X X X X X 1 X X h h h h X X - X X X X X X X \n";
 	
+	private String boardMov =  "X X X X X X X X X 3 X b b X 4 X X X X X X X X X \n"
+			  				  +"k k k k k k X - - - b b b b - - - X c c c c c c \n"
+			  				  +"k k k k k k - - b b b b b b b b - - c c c c c c \n"
+			  				  +"k k k k k k - - b b b b b b b b - - c c c c c c \n" 
+			  				  +"k k k k k k - - b b b b b b b b - - D c c c c c \n" 
+			  				  +"k k k k k k - - D b b b b b b D - - - c c c c c \n" 
+			  				  +"k k k k D k - - b b b b b b b b - - - - - - - 5 \n" 
+			  				  +"- - - - - - - - b D b b b b D b - - - - - - - X \n" 
+			  				  +"X - - - - - - - - - - - - - - - - - b b b b b b \n" 
+			  				  +"d d d d d - - - - - - - - - - - - - D b b b b b \n" 
+			  				  +"d d d d d d d d - - X X X X X - - - b b b b b b \n" 
+			  				  +"d d d d d d d d - - X X X X X - - - b b b b b b \n" 
+			  				  +"d d d d d d d D - - X X X X X - - - b b b b D b \n" 
+			  				  +"d d d d d d d d * - X X X X X - - - - - - - - X \n" 
+			  				  +"d d d d d d d d * * X X X X X - - - l l D l l X \n" 
+			  				  +"d d d d d d E d * * X X X X X - - l l l l l l l \n" 
+			  				  +"X - - * * * * * * * X X X X X - - D l l l l l l \n" 
+			  				  +"2 - * * * * * * * * * * * - - - - l l l l l l l \n" 
+			  				  +"X * * * * * * * * h h E D h h - - - l l l l l X \n" 
+			  				  +"l l l l l l E * * h h h h h h - - - - - - - - 6 \n" 
+			  				  +"l l l l l l l * * h h h h h h - - - - - - - - X \n" 
+			  				  +"l l l l l l l * * h h h h h D - - D s s s s s s \n" 
+			  				  +"l l l l l l l * * h h h h h h - - s s s s s s s \n" 
+			  				  +"l l l l l l l * * h h h h h h - - s s s s s s s \n" 
+			  				  +"X X X X X X X 1 X X h h h h X X - X X X X X X X \n";
+	
 	/**
 	 * Test that the initial layout is correct.
 	 * */
@@ -197,5 +223,40 @@ public class TestSuite {
 			System.out.println(boardRep + "\n\n" + board);
 		
 		assertEquals("BOARD LAYOUT INCORRECT!", boardRep, board.toString());
+	}
+	
+	/**
+	 * Test that Player 1 can move 12 spaces.
+	 * */
+	@Test
+	public void player1CanMove12SpacesFromStart1() {
+		chars = generateCharacters(6);
+		board = new Board(chars);
+		
+		board.getMoves(chars.get(0), 12);
+		
+		if (!boardMov.equals(board))
+			System.out.println(boardMov + "\n\n" + board);
+		
+		assertEquals("BOARD LAYOUT INCORRECT!", boardMov, board.toString());
+	}
+	
+	/**
+	 * Test that Player 1 can move 12 spaces, AND that getMoves(Character, int)
+	 * and getMoves(Location, int) return equivalent results.
+	 * */
+	@Test
+	public void player1CanMove12SpacesFromStart2() {
+		chars = generateCharacters(6);
+		
+		// getMoves(Character, int)
+		board = new Board(chars);
+		board.getMoves(chars.get(0), 12);
+		assertEquals("BOARD LAYOUT INCORRECT!", boardMov, board.toString());
+		
+		//getMoves(Location, int)
+		board = new Board(chars);
+		board.getMoves(chars.get(0).getPosition(), 12);
+		assertEquals("BOARD LAYOUT INCORRECT!", boardMov, board.toString());
 	}
 }

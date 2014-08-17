@@ -498,7 +498,7 @@ public class Main {
 										.setPosition(
 												game.getBoard()
 														.getStart(
-																game.getCurrentCharacter().token - 1));
+																game.getCurrentCharacter().token));
 							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							if (dataFrame != null)
@@ -960,16 +960,7 @@ public class Main {
 										Dialoge = "CORRECT ON ALL COUNTS! YOU WIN!!";
 										game.endGame();
 									} else {
-										Dialoge = "WRONG!! THE CARDS WERE:\n"
-												+ game.getBoard().getEnvelope()
-														.getcCard()
-												+ "\n"
-												+ game.getBoard().getEnvelope()
-														.getrCard()
-												+ "\n"
-												+ game.getBoard().getEnvelope()
-														.getwCard()
-												+ "\n\nYOU HAVE BEEN ELIMINATED!";
+										Dialoge = "WRONG!! \n\nYOU HAVE BEEN ELIMINATED!";
 									}
 									JOptionPane
 											.showMessageDialog(null, Dialoge);
