@@ -100,7 +100,7 @@ public class Main {
 
 	private final int CARD_WIDTH = 86;
 	private final int CARD_HEIGHT = 135;
-	
+
 	// Card image JLabel fields here
 	private Set<JLabel> playerHand = new HashSet<>();
 
@@ -112,7 +112,7 @@ public class Main {
 
 	JFrame dataFrame;
 	JTextArea dataTextArea;
-	
+
 	public Main() {
 
 		EventQueue.invokeLater(new Runnable() {
@@ -255,8 +255,8 @@ public class Main {
 				tabbedPane.addTab("Cards", tabPanel);
 
 				tabPanel = addTabPanel("Actions");
-				tabbedPane.addTab("Actions", tabPanel);				
-				
+				tabbedPane.addTab("Actions", tabPanel);
+
 				tabbedPane.addChangeListener(new ChangeListener() {
 					@Override
 					public void stateChanged(ChangeEvent e) {
@@ -265,7 +265,7 @@ public class Main {
 						System.out.println("CHANGED TAB!");
 					}
 				});
-				
+
 				controlPanel.add(tabbedPane, BorderLayout.WEST);
 				// The following line enables to use scrolling tabs.
 				tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -310,6 +310,9 @@ public class Main {
 		ui.put("OptionPane.background", mainPanelBgColor);
 		ui.put("OptionPane.foreground", mainPanelFontColor);
 		ui.put("OptionPane.messageForeground", mainPanelFontColor);
+		// radio button
+		ui.put("RadioButton.background", mainPanelBgColor);
+		ui.put("RadioButton.foreground", mainPanelFontColor);
 	}
 
 	protected JPanel addTabPanel(String text) {
@@ -590,7 +593,7 @@ public class Main {
 			panel.add(subPanel);
 
 		} else if (text.equals("Cards")) {
-			//FIXME: CARDS CAN DRAW OFF THE EDGE!!
+			// FIXME: CARDS CAN DRAW OFF THE EDGE!!
 			JPanel subPanel = new JPanel();
 			// sub panel
 			subPanel.setLayout(new GridBagLayout());
@@ -601,58 +604,60 @@ public class Main {
 			// add padding by 3px
 			gbc.insets = new Insets(3, 0, 0, 0);
 			gbc.gridy = 0;
-			
-			if (game != null && game.getTurnOrder() != null && 
-					!game.getTurnOrder().isEmpty() && game.getCurrentCharacter() != null){
+
+			if (game != null && game.getTurnOrder() != null
+					&& !game.getTurnOrder().isEmpty()
+					&& game.getCurrentCharacter() != null) {
 				playerHand.clear();
 				List<Card> hand = game.getCurrentCharacter().getHand();
-				
-				JLabel label = new JLabel(game.getCurrentCharacter().name + "'s Cards:");
+
+				JLabel label = new JLabel(game.getCurrentCharacter().name
+						+ "'s Cards:");
 				subPanel.add(label, gbc);
 				gbc.gridy += 1;
-				
-				for (int i = 0; i < hand.size(); i++){
+
+				for (int i = 0; i < hand.size(); i++) {
 					label = new JLabel();
 					playerHand.add(label);
 					String cardType = hand.get(i).getCardType();
 					String type = null;
 					String cardName = hand.get(i).getCardName();
-					switch (cardType){
-					case "Character": 
+					switch (cardType) {
+					case "Character":
 						type = "chars";
 						break;
-					case "Weapon": 
+					case "Weapon":
 						type = "weapons";
 						break;
-					case "Room": 
+					case "Room":
 						type = "rooms";
 						break;
 					}
 					ImageIcon ii;
 					if (!type.equals("weapons"))
 						ii = new ImageIcon(this.getClass().getResource(
-									imagePath + "cards/" + type + "/" + cardName
-											+ ".png"));
+								imagePath + "cards/" + type + "/" + cardName
+										+ ".png"));
 					else
 						ii = new ImageIcon(this.getClass().getResource(
 								imagePath + "cards/" + type + "/" + cardName
 										+ ".jpg"));
 					label.setIcon(ii);
-					label.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
+					label.setPreferredSize(new Dimension(CARD_WIDTH,
+							CARD_HEIGHT));
 					subPanel.add(label, gbc);
 					label.setVisible(true);
 					subPanel.repaint();
-					
-					if (i % 2 == 0){
+
+					if (i % 2 == 0) {
 						gbc.gridy += 1;
 						gbc.gridx = 0;
-					}
-					else 
+					} else
 						gbc.gridx += 1;
 				}
 			}
 			panel.add(subPanel);
-			//FIXME: CARDS CAN DRAW OFF THE EDGE!!
+			// FIXME: CARDS CAN DRAW OFF THE EDGE!!
 		}
 
 		else if (text.equals("Actions")) {
@@ -708,7 +713,8 @@ public class Main {
 
 			weaponImage = new JLabel();
 			weaponImage.setHorizontalAlignment(JLabel.CENTER);
-			weaponImage.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
+			weaponImage
+					.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
 			subPanel.add(weaponImage, gbc);
 
 			gbc.gridy += 1;
@@ -985,7 +991,6 @@ public class Main {
 		}
 		return panel;
 	}
-	
 
 	/**
 	 * show dice image when user rolled the dice
@@ -1009,7 +1014,6 @@ public class Main {
 			}
 		}
 	}
-	
 
 	/**
 	 * Show character card selected in Action Tab
@@ -1026,7 +1030,6 @@ public class Main {
 			}
 		}
 	}
-	
 
 	/**
 	 * Show weapon card selected in Action Tab
@@ -1042,7 +1045,6 @@ public class Main {
 			}
 		}
 	}
-	
 
 	/**
 	 * Show room card selected in Action Tab
@@ -1059,7 +1061,6 @@ public class Main {
 			}
 		}
 	}
-	
 
 	/**
 	 * Pop up dialog to ask total players participating the game
@@ -1088,7 +1089,6 @@ public class Main {
 		}
 		return playerNum;
 	}
-	
 
 	/**
 	 * Ask each player name and character playing the game
@@ -1197,7 +1197,6 @@ public class Main {
 		return order;
 	}
 
-
 	/**
 	 * This method is adding items to menu bar
 	 * 
@@ -1263,10 +1262,10 @@ public class Main {
 					textArea.setWrapStyleWord(true);
 					frame.setContentPane(scrollPane);
 					frame.setResizable(false);
-					
+
 					textArea.setText(Data.helpDes);
 					textArea.setCaretPosition(0);
-					
+
 					frame.pack();
 					frame.setVisible(true);
 				}
@@ -1277,9 +1276,10 @@ public class Main {
 			fileMenuItem.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (game != null && !game.getTurnOrder().isEmpty() && game.getCurrentCharacter() != null){ 
+					if (game != null && !game.getTurnOrder().isEmpty()
+							&& game.getCurrentCharacter() != null) {
 						Character c = game.getCurrentCharacter();
-						
+
 						final JFrame frame = new JFrame(c.name + "'s Notes");
 						frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 						frame.addWindowListener(new WindowAdapter() {
@@ -1299,15 +1299,15 @@ public class Main {
 						textArea.setWrapStyleWord(true);
 						frame.setContentPane(scrollPane);
 						frame.setResizable(false);
-						
+
 						textArea.setText(c.getData());
 						textArea.setCaretPosition(0);
-						
+
 						frame.pack();
 						frame.setVisible(true);
 						dataFrame = frame;
 						dataTextArea = textArea;
-					
+
 					}
 				}
 			});
