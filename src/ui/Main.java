@@ -21,11 +21,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -593,31 +590,32 @@ public class Main {
 			panel.add(subPanel);
 
 		} else if (text.equals("Cards")) {
-			//FIXME: CARDS WON'T DRAW!!
+			//FIXME: CARDS CAN DRAW OFF THE EDGE!!
+			JPanel subPanel = new JPanel();
+			// sub panel
+			subPanel.setLayout(new GridBagLayout());
+			GridBagConstraints gbc = new GridBagConstraints();
+
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			gbc.ipadx = 60;
+			// add padding by 3px
+			gbc.insets = new Insets(3, 0, 0, 0);
+			gbc.gridy = 0;
+			
 			if (game != null && game.getTurnOrder() != null && 
 					!game.getTurnOrder().isEmpty() && game.getCurrentCharacter() != null){
 				playerHand.clear();
 				List<Card> hand = game.getCurrentCharacter().getHand();
-				JPanel subPanel = new JPanel();
-				// sub panel
-				subPanel.setLayout(new GridBagLayout());
-				GridBagConstraints gbc = new GridBagConstraints();
-	
-				gbc.fill = GridBagConstraints.HORIZONTAL;
-				gbc.ipadx = 80;
-				// add padding by 5px
-				gbc.insets = new Insets(5, 0, 0, 0);
-				gbc.gridy = 0;
 				
 				JLabel label = new JLabel(game.getCurrentCharacter().name + "'s Cards:");
 				subPanel.add(label, gbc);
 				gbc.gridy += 1;
 				
-				for (int i = 0; i < hand.size(); i++){	
+				for (int i = 0; i < hand.size(); i++){
 					label = new JLabel();
 					playerHand.add(label);
 					String cardType = hand.get(i).getCardType();
-					String type;
+					String type = null;
 					String cardName = hand.get(i).getCardName();
 					switch (cardType){
 					case "Character": 
@@ -629,30 +627,38 @@ public class Main {
 					case "Room": 
 						type = "rooms";
 						break;
-					default: 
-						type = "ioyhbefvolberouyb";
-						break;
 					}
 					System.out.println(this.getClass()
 							.getResource(imagePath + "cards/" + type + "/" + cardName 
-									+ ".png"));
-					ImageIcon ii = new ImageIcon(this.getClass()
-							.getResource(
+									+ ".jpg"));
+					ImageIcon ii;
+					if (!type.equals("weapons"))
+						ii = new ImageIcon(this.getClass().getResource(
 									imagePath + "cards/" + type + "/" + cardName
 											+ ".png"));
+					else
+						ii = new ImageIcon(this.getClass().getResource(
+								imagePath + "cards/" + type + "/" + cardName
+										+ ".jpg"));
 					label.setIcon(ii);
 					label.setPreferredSize(new Dimension(CARD_WIDTH, CARD_HEIGHT));
 					subPanel.add(label, gbc);
 					label.setVisible(true);
 					subPanel.repaint();
 					
-					gbc.gridy += 1;
+					if (i % 2 == 0){
+						gbc.gridy += 1;
+						gbc.gridx = 0;
+					}
+					else 
+						gbc.gridx += 1;
 				}
 			}
-			
-			//FIXME: CARDS WON'T DRAW!!
+			panel.add(subPanel);
+			//FIXME: CARDS CAN DRAW OFF THE EDGE!!
+		}
 
-		} else if (text.equals("Actions")) {
+		else if (text.equals("Actions")) {
 			JPanel subPanel = new JPanel();
 			// sub panel
 			subPanel.setLayout(new GridBagLayout());
