@@ -1,18 +1,129 @@
 package tests;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Categories.ExcludeCategory;
 
-import ui.Main;
+import ui.Board;
+import gameObjects.Character;
+import gameObjects.CARDS.Card;
 
 public class TestSuite {
 
-	Main main = new Main();
+	List<Character> chars;
+	Board board;
 
-	@Test
-	public void test() {
-		fail("Not yet implemented");
+	/**
+	 * Auto Generates the list of Characters for the board.
+	 * @param num. The number of Characters to generate
+	 * @return A list of Generated Characters.
+	 * */
+	private List<Character> generateCharacters(int num) {
+		List<Character> chars = new ArrayList<Character>();
+		for (int i = 1; i <= num; i++)
+			chars.add(new Character("Player " + i, i));
+		return chars;
 	}
-
+	
+	//////////////////////////////////////////////////////
+	////////////////////	TESTS	//////////////////////
+	//////////////////////////////////////////////////////
+	
+	/**
+	 * Test that less than three characters throws exception
+	 * */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidNumOfCharacterTest1() {
+		chars = generateCharacters(2);
+		board = new Board(chars);
+		fail("There has to be AT LEAST 3 characters!");
+	}
+	
+	/**
+	 * Test that more than six characters throws exception
+	 * */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidNumOfCharacterTest2() {
+		chars = generateCharacters(7);
+		board = new Board(chars);
+		fail("There can be NO MORE THAN 6 characters!");
+	}
+	
+	/**
+	 * Test that 3 characters get 6 cards
+	 * */
+	@Test
+	public void numOfCardsHeldByCharacters1() {
+		chars = generateCharacters(3);
+		board = new Board(chars);
+		for (int i = 0; i < 3; i++)
+			assertTrue("If there are 3 characters, "
+					+ "then EACH PLAYER should have 6 cards", 
+					chars.get(i).getHand().size() == 6);
+	}
+	
+	/**
+	 * Test that 6 characters get 3 cards
+	 * */
+	@Test
+	public void numOfCardsHeldByCharacters2() {
+		chars = generateCharacters(6);
+		board = new Board(chars);
+		for (int i = 0; i < 6; i++)
+			assertTrue("If there are 6 characters, "
+					+ "then EACH PLAYER should have 3 cards", 
+					chars.get(i).getHand().size() == 3);
+	}
+	
+	/**
+	 * Test that the envelope has 3 cards - regardless of player number
+	 * */
+	@Test
+	public void envelopeHas3Cards() {
+		for (int c = 3; c < 7; c++){
+			chars = generateCharacters(c);
+			board = new Board(chars);
+			
+			Card card1 = board.getEnvelope().getcCard();
+			Card card2 = board.getEnvelope().getrCard();
+			Card card3 = board.getEnvelope().getwCard();
+			
+			assertTrue("The Envelope MUST have 3 cards, no "
+					+ "matter how many players there are", 
+					(card1 != null && card2 != null && card3 != null));
+		}
+	}
+	
+	/**
+	 * Test that the envelope has 3 cards of different types
+	 * */
+	@Test
+	public void envelopeHas3DifferentKindsOfCards() {
+		for (int c = 3; c < 7; c++){
+			chars = generateCharacters(c);
+			board = new Board(chars);
+			
+			Card card1 = board.getEnvelope().getcCard();
+			Card card2 = board.getEnvelope().getrCard();
+			Card card3 = board.getEnvelope().getwCard();
+			
+			if (card1 == null || card2 == null || card3 == null){
+				fail("The envelope needs 3 cards");
+			}
+			
+			String type1 = card1.getCardType();
+			String type2 = card2.getCardType();
+			String type3 = card3.getCardType();
+			
+			boolean condition = (!type1.equals(type2) && 
+			!type1.equals(type3) && !type3.equals(type2));
+			
+			assertTrue("The 3 cards in the Envelope MUST be different"
+					+ "types", condition);
+		}
+	}
 }
