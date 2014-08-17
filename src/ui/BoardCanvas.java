@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import control.GameState;
+import control.GameState.StateOfGame;
 
 /**
  * Board represents the game board of cluedo game
@@ -40,7 +41,7 @@ public class BoardCanvas extends JPanel {
 		 */
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (board == null)
+				if (board == null || GameState.state == StateOfGame.NOTHINGS_HAPPENING)
 					return;
 				Character cc = game.getCurrentCharacter();
 				int x = e.getX();
@@ -116,7 +117,7 @@ public class BoardCanvas extends JPanel {
 			board.draw(g);
 		} else if (GameState.state == GameState.StateOfGame.PLAYING) {
 			board.draw(g);
-		}
+		} 
 	}
 
 	public void createBoard(List<Character> characters) {

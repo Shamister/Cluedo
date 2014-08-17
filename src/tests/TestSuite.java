@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.junit.experimental.categories.Categories.ExcludeCategory;
-
 import ui.Board;
 import gameObjects.Character;
+import gameObjects.Location;
 import gameObjects.CARDS.Card;
 
 public class TestSuite {
@@ -234,29 +233,29 @@ public class TestSuite {
 		board = new Board(chars);
 		
 		board.getMoves(chars.get(0), 12);
-		
-		if (!boardMov.equals(board))
-			System.out.println(boardMov + "\n\n" + board);
-		
+				
 		assertEquals("BOARD LAYOUT INCORRECT!", boardMov, board.toString());
 	}
 	
 	/**
-	 * Test that Player 1 can move 12 spaces, AND that getMoves(Character, int)
-	 * and getMoves(Location, int) return equivalent results.
+	 * Test that when Player 1 moves, the old location is accessible, 
+	 * and the new one isn't
+	 * 
+	 * REQUIRES THE USER TO AGREE THAT THEY WANT TO MOVE!!
 	 * */
 	@Test
-	public void player1CanMove12SpacesFromStart2() {
+	public void player1Movement() {
 		chars = generateCharacters(6);
 		
-		// getMoves(Character, int)
 		board = new Board(chars);
-		board.getMoves(chars.get(0), 12);
-		assertEquals("BOARD LAYOUT INCORRECT!", boardMov, board.toString());
 		
-		//getMoves(Location, int)
-		board = new Board(chars);
-		board.getMoves(chars.get(0).getPosition(), 12);
-		assertEquals("BOARD LAYOUT INCORRECT!", boardMov, board.toString());
+		Location start = chars.get(0).getPosition();
+		
+		board.getMoves(chars.get(0), 12);
+		board.move(chars.get(0), board.getValidMoves().get(1), 12);
+		
+		Location end = chars.get(0).getPosition();
+		assertNotEquals(start, end);
+		assertTrue(start.getAccessible() && !end.getAccessible());
 	}
 }

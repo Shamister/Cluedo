@@ -260,7 +260,9 @@ public class Main {
 				tabbedPane.addChangeListener(new ChangeListener() {
 					@Override
 					public void stateChanged(ChangeEvent e) {
-						if (tabbedPane.getSelectedIndex() == 1)
+						if (tabbedPane.getSelectedIndex() == 0)
+							tabbedPane.setComponentAt(0, addTabPanel("Status"));
+						else if (tabbedPane.getSelectedIndex() == 1)
 							tabbedPane.setComponentAt(1, addTabPanel("Cards"));
 					}
 				});
@@ -328,6 +330,29 @@ public class Main {
 			gbc.ipadx = 80;
 			gbc.gridy = 0;
 
+			JPanel playerPanel = new JPanel();
+			
+			JLabel playerName = new JLabel();
+			JLabel playerImage = new JLabel();
+			if (game != null && game.getTurnOrder() != null && 
+					!game.getTurnOrder().isEmpty()){
+				playerName.setText(game.getCurrentCharacter().name + " (" + 
+					Data.charNames[game.getCurrentCharacter().token-1] + ")");
+				
+				ImageIcon ii = new ImageIcon(this.getClass().getResource(
+							imagePath + "cards/chars/" + Data.charNames[game.getCurrentCharacter().token-1]
+									+ ".png"));
+				playerImage.setIcon(ii);
+			}
+			playerPanel.add(playerName);
+			subPanel.add(playerPanel, gbc);
+			gbc.gridy += 1;
+			
+			playerPanel = new JPanel();
+			playerPanel.add(playerImage);
+			subPanel.add(playerPanel, gbc);
+			gbc.gridy += 1;
+			
 			JPanel dicePanel = new JPanel();
 
 			// dice image
@@ -494,18 +519,23 @@ public class Main {
 										.getRoom().doors)
 									l.setAccessible(true);
 							else
-								game.getCurrentCharacter()
-										.setPosition(
-												game.getBoard()
-														.getStart(
-																game.getCurrentCharacter().token));
+								game.getCurrentCharacter().setPosition(game.getBoard()
+											.getStart(game.getCurrentCharacter().token));
 							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							if (dataFrame != null)
 								dataFrame.dispose();
 							dataFrame = null;
 							game.EndTurnNow();
-							game.getBoardCanvas().repaint();
+							if (GameState.state == GameState.StateOfGame.GAME_OVER){
+								JOptionPane.showMessageDialog(null, 
+										"Solution was:\nROOM: " + game.getBoard().getEnvelope().getrCard()
+										 + "\nCHARACTER: " + game.getBoard().getEnvelope().getcCard()
+										 + "\nWEAPON: " + game.getBoard().getEnvelope().getwCard());
+								System.exit(0);
+							}
+							else
+								game.getBoardCanvas().repaint();
 							return;
 						}
 						int value = JOptionPane.showConfirmDialog(null,
@@ -529,10 +559,8 @@ public class Main {
 							diceImage1.setIcon(null);
 							diceImage2.setIcon(null);
 							game.EndTurnNow();
-							if (GameState.state == GameState.StateOfGame.GAME_OVER)
-								game = new GameState();
-							else
-								game.getBoardCanvas().repaint();
+							game.getBoardCanvas().repaint();
+							return;
 						} else if (value == 0
 								&& game.getPossibleActions().contains(
 										GameState.TurnState.CHOOSE_SPACE)) {
@@ -595,7 +623,6 @@ public class Main {
 			panel.add(subPanel);
 
 		} else if (text.equals("Cards")) {
-			// FIXME: CARDS CAN DRAW OFF THE EDGE!!
 			JPanel subPanel = new JPanel();
 			// sub panel
 			subPanel.setLayout(new GridBagLayout());
@@ -659,7 +686,6 @@ public class Main {
 				}
 			}
 			panel.add(subPanel);
-			// FIXME: CARDS CAN DRAW OFF THE EDGE!!
 		}
 
 		else if (text.equals("Actions")) {
