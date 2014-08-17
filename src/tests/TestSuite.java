@@ -126,4 +126,76 @@ public class TestSuite {
 					+ "types", condition);
 		}
 	}
+	
+	/**
+	 * Test that there is a total of 21 cards in existence
+	 * */
+	@Test
+	public void twentyOneCardsExist() {
+		for (int c = 3; c < 7; c++){
+			chars = generateCharacters(c);
+			board = new Board(chars);
+			
+			Card card1 = board.getEnvelope().getcCard();
+			Card card2 = board.getEnvelope().getrCard();
+			Card card3 = board.getEnvelope().getwCard();
+			
+			if (card1 == null || card2 == null || card3 == null){
+				fail("The envelope needs 3 cards");
+			}
+			
+			int cardNum = 3;
+			for (Character character : board.getCharacters()){
+				cardNum += character.getHand().size();
+			} 
+			
+			assertEquals("There should be 21 cards only - " + cardNum + " found", 21, cardNum);
+		}
+	}
+	
+	/*
+	 * 
+	 * NOW making a new set of tests focused on the board layout and movement
+	 * 
+	 * */
+		
+	private String boardRep =  "X X X X X X X X X 3 X b b X 4 X X X X X X X X X \n"
+							  +"k k k k k k X - - - b b b b - - - X c c c c c c \n"
+							  +"k k k k k k - - b b b b b b b b - - c c c c c c \n"
+							  +"k k k k k k - - b b b b b b b b - - c c c c c c \n" 
+							  +"k k k k k k - - b b b b b b b b - - D c c c c c \n" 
+							  +"k k k k k k - - D b b b b b b D - - - c c c c c \n" 
+							  +"k k k k D k - - b b b b b b b b - - - - - - - 5 \n" 
+							  +"- - - - - - - - b D b b b b D b - - - - - - - X \n" 
+							  +"X - - - - - - - - - - - - - - - - - b b b b b b \n" 
+							  +"d d d d d - - - - - - - - - - - - - D b b b b b \n" 
+							  +"d d d d d d d d - - X X X X X - - - b b b b b b \n" 
+							  +"d d d d d d d d - - X X X X X - - - b b b b b b \n" 
+							  +"d d d d d d d D - - X X X X X - - - b b b b D b \n" 
+							  +"d d d d d d d d - - X X X X X - - - - - - - - X \n" 
+							  +"d d d d d d d d - - X X X X X - - - l l D l l X \n" 
+							  +"d d d d d d D d - - X X X X X - - l l l l l l l \n" 
+							  +"X - - - - - - - - - X X X X X - - D l l l l l l \n" 
+							  +"2 - - - - - - - - - - - - - - - - l l l l l l l \n" 
+							  +"X - - - - - - - - h h D D h h - - - l l l l l X \n" 
+							  +"l l l l l l D - - h h h h h h - - - - - - - - 6 \n" 
+							  +"l l l l l l l - - h h h h h h - - - - - - - - X \n" 
+							  +"l l l l l l l - - h h h h h D - - D s s s s s s \n" 
+							  +"l l l l l l l - - h h h h h h - - s s s s s s s \n" 
+							  +"l l l l l l l - - h h h h h h - - s s s s s s s \n" 
+							  +"X X X X X X X 1 X X h h h h X X - X X X X X X X \n";
+	
+	/**
+	 * Test that the initial layout is correct.
+	 * */
+	@Test
+	public void initialBoardIsOkay() {
+		chars = generateCharacters(6);
+		board = new Board(chars);
+		
+		if (!boardRep.equals(board))
+			System.out.println(boardRep + "\n\n" + board);
+		
+		assertEquals("BOARD LAYOUT INCORRECT!", boardRep, board.toString());
+	}
 }

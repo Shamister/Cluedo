@@ -112,8 +112,13 @@ public class Board {
 			}
 		});
 		
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 6; i++){
 			startSpaces[i].setAccessible(false);
+			for (Character c : characters)
+				if (c.token == i+1)
+					c.setPosition(startSpaces[i]);
+		}
+		
 		// -------------------------------------------
 		rooms = new RoomBuilder(spaces).getRooms();
 		envelope = new CardBuilder(characters).getChosenCards();
@@ -127,24 +132,6 @@ public class Board {
 		try {
 			bg = ImageIO.read(this.getClass().getResource(Main.imagePath + "board/bg.jpg"));
 		} catch (IOException e) {}
-		
-		/*
-		 * 14/08/2014 - 15:09 (3:09 pm)
-		 * This was a good idea, but if this isn't in the draw method (it is now, I moved it),
-		 * then the board would NEVER CHANGE. I have preserved this code and moved it into the draw 
-		 * method.
-		 * 
-		 * 	// get string of board representation
-			boardRep = new String[BOARD_HEIGHT][BOARD_WIDTH];
-			Scanner sc = new Scanner(toString());
-	
-			for (int j = 0; j < BOARD_HEIGHT; j++) {
-				for (int i = 0; i < BOARD_WIDTH; i++) {
-					boardRep[j][i] = sc.next();
-				}
-			}
-			sc.close();
-		 * */
 	}
 		
 	/**

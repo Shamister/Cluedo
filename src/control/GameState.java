@@ -94,9 +94,7 @@ public class GameState {
 			return;
 		state = StateOfGame.SETUP_GAME;
 		boardCanvas.createBoard(characters);
-		for (gameObjects.Character c : characters){
-			c.setPosition(getBoard().getStart(c.token));
-		}
+		
 		state = StateOfGame.READY;
 		gameObjects.Character cc = getCurrentCharacter();
 		cc.setActive(true);

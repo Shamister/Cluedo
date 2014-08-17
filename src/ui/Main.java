@@ -262,7 +262,6 @@ public class Main {
 					public void stateChanged(ChangeEvent e) {
 						if (tabbedPane.getSelectedIndex() == 1)
 							tabbedPane.setComponentAt(1, addTabPanel("Cards"));
-						System.out.println("CHANGED TAB!");
 					}
 				});
 
